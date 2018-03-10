@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5f93935f-7dd1-49a5-86d6-c27b6decbaa9" name="Default" comment="" />
+    <list default="true" id="5f93935f-7dd1-49a5-86d6-c27b6decbaa9" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/hexo-theme-doc" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/themes/even" afterPath="$PROJECT_DIR$/themes/even" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -11,19 +16,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="deque.md" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/source/_posts/deque.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="FIRST">
-              <first_editor relative-caret-position="720">
-                <caret line="48" column="3" lean-forward="false" selection-start-line="48" selection-start-column="3" selection-end-line="48" selection-end-column="3" />
-                <folding />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="thoughts.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/_posts/thoughts.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
@@ -63,7 +55,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jichu.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="jichu.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/_posts/jichu.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="FIRST">
@@ -87,6 +79,36 @@
                   <marker date="1520625293732" expanded="true" signature="11636:11700" ph="{...}" />
                   <marker date="1520625293732" expanded="true" signature="11679:11698" ph="{}" />
                   <marker date="1520625293732" expanded="true" signature="11716:11753" ph="{...}" />
+                </folding>
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="segmenttree.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/source/_posts/segmenttree.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="278">
+                <caret line="134" column="31" lean-forward="false" selection-start-line="134" selection-start-column="31" selection-end-line="134" selection-end-column="31" />
+                <folding>
+                  <marker date="1520716248587" expanded="true" signature="365:405" ph="/**...*/" />
+                  <marker date="1520716248587" expanded="true" signature="446:566" ph="/**...*/" />
+                  <marker date="1520716248587" expanded="true" signature="620:963" ph="{...}" />
+                  <marker date="1520716248587" expanded="true" signature="1012:1040" ph="/**...*/" />
+                  <marker date="1520716248587" expanded="true" signature="1083:1220" ph="/**...*/" />
+                  <marker date="1520716248587" expanded="true" signature="1262:1273" ph=" { " />
+                  <marker date="1520716248587" expanded="true" signature="1328:1334" ph=" }" />
+                  <marker date="1520716248587" expanded="true" signature="1407:1864" ph="{...}" />
+                  <marker date="1520716248587" expanded="true" signature="1909:1951" ph="/**...*/" />
+                  <marker date="1520716248587" expanded="true" signature="1993:2155" ph="/**...*/" />
+                  <marker date="1520716248587" expanded="true" signature="2223:2744" ph="{...}" />
+                  <marker date="1520716248587" expanded="true" signature="2790:2827" ph="/**...*/" />
+                  <marker date="1520716248587" expanded="true" signature="2868:3217" ph="/**...*/" />
+                  <marker date="1520716248587" expanded="true" signature="3281:3619" ph="{...}" />
+                  <marker date="1520716248587" expanded="true" signature="3667:3707" ph="/**...*/" />
+                  <marker date="1520716248587" expanded="true" signature="3809:4182" ph="{...}" />
                 </folding>
               </first_editor>
               <second_editor />
@@ -191,6 +213,9 @@
       <find>mat</find>
     </findStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
       <projects_view />
@@ -243,6 +268,7 @@
         <option value="$PROJECT_DIR$/source/_posts/map.md" />
         <option value="$PROJECT_DIR$/source/_posts/thoughts.md" />
         <option value="$PROJECT_DIR$/source/_posts/jichu.md" />
+        <option value="$PROJECT_DIR$/source/_posts/segmenttree.md" />
       </list>
     </option>
   </component>
@@ -259,7 +285,6 @@
     </treeState>
   </component>
   <component name="NodeModulesDirectoryManager">
-    <handled-path value="$PROJECT_DIR$/hexo-theme-doc/node_modules" />
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
@@ -267,6 +292,9 @@
     <option name="y" value="-157" />
     <option name="width" value="1442" />
     <option name="height" value="1010" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -309,25 +337,6 @@
               <item name="HexoBlog" type="462c0819:PsiDirectoryNode" />
               <item name="source" type="462c0819:PsiDirectoryNode" />
               <item name="_posts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="HexoBlog" type="b2602c69:ProjectViewProjectNode" />
-              <item name="HexoBlog" type="462c0819:PsiDirectoryNode" />
-              <item name="source" type="462c0819:PsiDirectoryNode" />
-              <item name="_posts" type="462c0819:PsiDirectoryNode" />
-              <item name="gcd" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="HexoBlog" type="b2602c69:ProjectViewProjectNode" />
-              <item name="HexoBlog" type="462c0819:PsiDirectoryNode" />
-              <item name="source" type="462c0819:PsiDirectoryNode" />
-              <item name="about" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="HexoBlog" type="b2602c69:ProjectViewProjectNode" />
-              <item name="HexoBlog" type="462c0819:PsiDirectoryNode" />
-              <item name="source" type="462c0819:PsiDirectoryNode" />
-              <item name="categories" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="HexoBlog" type="b2602c69:ProjectViewProjectNode" />
@@ -474,12 +483,12 @@
       <workItem from="1519576727117" duration="40090000" />
       <workItem from="1520706434886" duration="37000" />
       <workItem from="1520707175356" duration="107000" />
-      <workItem from="1520707821664" duration="111000" />
+      <workItem from="1520707821664" duration="3914000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="127591000" />
+    <option name="totallyTimeSpent" value="131394000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -502,8 +511,8 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960597" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28997022" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28997022" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11661342" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -533,13 +542,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/theme/cold/_config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="10" lean-forward="false" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/scaffolds/draft.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -1005,6 +1007,34 @@
           <first_editor relative-caret-position="45">
             <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
             <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/segmenttree.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="278">
+            <caret line="134" column="31" lean-forward="false" selection-start-line="134" selection-start-column="31" selection-end-line="134" selection-end-column="31" />
+            <folding>
+              <marker date="1520716248587" expanded="true" signature="365:405" ph="/**...*/" />
+              <marker date="1520716248587" expanded="true" signature="446:566" ph="/**...*/" />
+              <marker date="1520716248587" expanded="true" signature="620:963" ph="{...}" />
+              <marker date="1520716248587" expanded="true" signature="1012:1040" ph="/**...*/" />
+              <marker date="1520716248587" expanded="true" signature="1083:1220" ph="/**...*/" />
+              <marker date="1520716248587" expanded="true" signature="1262:1273" ph=" { " />
+              <marker date="1520716248587" expanded="true" signature="1328:1334" ph=" }" />
+              <marker date="1520716248587" expanded="true" signature="1407:1864" ph="{...}" />
+              <marker date="1520716248587" expanded="true" signature="1909:1951" ph="/**...*/" />
+              <marker date="1520716248587" expanded="true" signature="1993:2155" ph="/**...*/" />
+              <marker date="1520716248587" expanded="true" signature="2223:2744" ph="{...}" />
+              <marker date="1520716248587" expanded="true" signature="2790:2827" ph="/**...*/" />
+              <marker date="1520716248587" expanded="true" signature="2868:3217" ph="/**...*/" />
+              <marker date="1520716248587" expanded="true" signature="3281:3619" ph="{...}" />
+              <marker date="1520716248587" expanded="true" signature="3667:3707" ph="/**...*/" />
+              <marker date="1520716248587" expanded="true" signature="3809:4182" ph="{...}" />
+            </folding>
           </first_editor>
           <second_editor />
         </state>
