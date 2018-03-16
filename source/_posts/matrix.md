@@ -6,6 +6,7 @@ categories: [Algorithm]
 ---
 
 ### 二分查超
+#### 302. Smallest Rectangle Enclosing Black Pixels
 ```java
 /**
  * 题意：一个由二进制矩阵表示的图，0表示白色像素点，1表示黑色像素点。黑色像素是联通的，即只有一块
@@ -90,4 +91,83 @@ public class SmallestRectangleEnclosingBlackPixels0302 {
     }
 }
 
+```
+#### 317. Shortest Distance from All Buildings
+```java
+/**
+ * 题意：给一个二维矩阵，0代表空地，1代表房子，2代表障碍，求一个空地到所有楼最短距离
+ * */
+public class ShortestDistancefromAllBuildings0317 {
+    /** time O(kmn) k为building的数量 space O(mn) 方法：最短路径肯定用bfs
+     * 思路：从每个building开始4个方向的dfs，空地都update成到building的距离，
+     * 另在helper函数里面用一个visited布尔数组来标记每个元素的访问状态，
+     * dfs完所有的楼之后，数字最小的空地就是答案，这里需要注意的一种情况就是，有些空地并不能到达所有空地
+     * 所以要用一个helper数组记录connected，当前空地是不是和所有的building都相连，在每次遍历到空地的时候，
+     * connected 加1，最后找结果的时候，要看当前元素是否为空地，distance是否大于0，以及是否可以连通所有楼
+     * 优化：可以在递归函数中检查，从当前building是否能连通所有其他的building，如果不能直接返回-1
+     * */
+    public int shortestDistance(int[][] grid) {
+        int[][] distance = new int[grid.length][grid[0].length];
+        int[][] connected = new int[grid.length][grid[0].length];
+        int buildings = 0;
+        for (int i = 0; i < grid.length; ++i) {
+            for (int j = 0; j < grid[0].length; ++j) {
+                if (grid[i][j] == 1) {
+                    ++buildings;
+                }
+            }
+        }
+        for (int i = 0; i < grid.length; ++i) {
+            for (int j = 0; j < grid[0].length; ++j) {
+                if (grid[i][j] == 1) {
+                    if (!bfs(grid, distance, connected, i, j, buildings)) {
+                        return -1;
+                    }
+                }
+            }
+        }
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < grid.length; ++i) {
+            for (int j = 0; j < grid[0].length; ++j) {
+                if (grid[i][j] == 0 && distance[i][j] > 0 && connected[i][j] == buildings) {
+                    min = Math.min(min, distance[i][j]);
+                }
+            }
+        }
+        return min == Integer.MAX_VALUE ? -1 : min;
+    }
+    private boolean bfs(int[][] grid, int[][] distance, int[][] connected, int x, int y, int buildings) {
+        boolean[][] visited = new boolean[grid.length][grid[0].length];
+        int[][] directions = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        int dis = 0;
+        int findBuildings = 1;
+        visited[x][y] = true;
+        Deque<int[]> queue = new ArrayDeque<>();
+        queue.offer(new int[] {x, y});
+        while (!queue.isEmpty()) {
+            ++dis;
+            int size = queue.size();
+            while (--size >= 0) {
+                int[] curr = queue.poll();
+                for (int[] direction : directions) {
+                    int x1 = curr[0] + direction[0];
+                    int y1 = curr[1] + direction[1];
+                    if(x1 < 0 || x1 == grid.length || y1 < 0 || y1 == grid[0].length){
+                        continue;
+                    }
+                    if (!visited[x1][y1] && grid[x1][y1] == 1) {
+                        ++findBuildings;
+                    }
+                    if (!visited[x1][y1] && grid[x1][y1] == 0) {
+                        distance[x1][y1] += dis;
+                        ++connected[x1][y1];
+                        queue.offer(new int[] {x1, y1});
+                    }
+                    visited[x1][y1] = true;
+                }
+            }
+        }
+        return findBuildings == buildings;
+    }
+}
 ```

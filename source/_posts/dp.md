@@ -4,7 +4,11 @@ date: 2018-02-13 03:49:54
 tags: [dp]
 categories: [Algorithm]
 ---
+1. 最优化原理（最优子结构性质） 最优化原理可这样阐述：一个最优化策略具有这样的性质，不论过去状态和决策如何，对前面的决策所形成的状态而言，余下的诸决策必须构成最优策略。简而言之，一个最优化策略的子策略总是最优的。一个问题满足最优化原理又称其具有最优子结构性质。
 
+2. 无后效性  将各阶段按照一定的次序排列好之后，对于某个给定的阶段状态，它以前各阶段的状态无法直接影响它未来的决策，而只能通过当前的这个状态。换句话说，每个状态都是过去历史的一个完整总结。这就是无后向性，又称为无后效性。
+
+3. 子问题的重叠性  动态规划将原来具有指数级时间复杂度的搜索算法改进成了具有多项式时间复杂度的算法。其中的关键在于解决冗余，这是动态规划算法的根本目的。动态规划实质上是一种以空间换时间的技术，它在实现的过程中，不得不存储产生过程中的各种状态，所以它的空间复杂度要大于其它的算法。
 ### House Robber 系列
 
 #### 198. House Robber
@@ -610,6 +614,48 @@ public class PaintFence0276 {
 ```
 
 ### 不好分类
+
+#### 634. Find the Derangement of An Array
+```java
+/**
+ * 题意：假设给一个数组1到n，求这个数组有多少个permutation，
+ * 要求permutation里面的任何数字都不能和原数组位置一样
+ * */
+public class FindtheDerangementofAnArray0634 {
+    /** time O() space O() 方法：dp
+     * 思路： 比如1，2，3，4，假设现在把1移走到其他位置，比如说2号位置，那么如果把2号放回到1号，
+     * 这时候，就有n-2种方法，那么如果不把2号放回到1号，也就是说 ，假设2号的原本位置是1，
+     * 那么这种情况就有n-1种方法，而对于每个位置，我们都可以把除自己外所有元素都换过来一次，
+     * 做刚才的假设, 那么也就是有n-1 次 刚才2种方法的和
+     * 优化：可以做一个空间1的优化，有3个变量来记录
+     * */
+    public int findDerangement(int n) {
+        if (n < 2) {
+            return 0;
+        }
+        int[] dp = new int[n + 1];
+        dp[2] = 1;
+        for (int i = 3; i <= n; ++i) {
+            dp[i] = (i - 1) * (dp[i - 1] + dp [i - 2]);
+        }
+        return dp[n];
+    }
+    public int findDerangement1(int n) {
+        if (n < 2) {
+            return 0;
+        }
+        long withoutOne = 1;
+        long withoutTwo = 0;
+        long result = 1;
+        for (int i = 3; i <= n; ++i) {
+            result = (i - 1) * (withoutOne + withoutTwo) % 1000000007;
+            withoutTwo = withoutOne;
+            withoutOne = result;
+        }
+        return (int)result;
+    }
+}
+```
 
 #### 357. Count Numbers with Unique Digits
 

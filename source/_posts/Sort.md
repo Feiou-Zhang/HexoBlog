@@ -272,3 +272,171 @@ public class KthLargestElementinanArray0215 {
 }
 
 ```
+### Wiggle Sort
+
+#### 280. Wiggle Sort
+
+```java
+
+/**
+ * 题意：给一个无序无重数组，要求in place 做一个摇摆排序，也就是小大小大小 这样的顺序
+ * */
+public class WiggleSort0280 {
+    /** time O(n) space O(1) 方法：
+     * 思路：方法就是，假设之前都已经排好序，如果当前元素处于错误位置，那么就把当前元素和前一个元素swap，
+     * 比如当前位置本来应该大于前一个，但现在却小于前一个了， 那么对调之后，当前2个元素肯定是排好序的
+     * 而且也一定不会影响之前的元素，因为，前一个本来就应该小于更前面一个，现在换过去个比之前更小的元素
+     * 所以也一定小于更前面的元素，反之同理
+     * 优化：
+     * */
+    public void wiggleSort(int[] nums) {
+        if (nums == null || nums.length < 2) {
+            return;
+        }
+        for (int i = 1; i < nums.length; ++i) {
+            if (i % 2 == 1 && nums[i] < nums[i - 1]) {
+                    swap(nums, i, i - 1);
+            }
+            if (i % 2 == 0 && nums[i] > nums[i - 1]) {
+                swap(nums, i, i - 1);
+            }
+        }
+    }
+    private void swap(int[] nums, int a, int b) {
+        int tmp = nums[a];
+        nums[a] = nums[b];
+        nums[b] = tmp;
+    }
+}
+```
+
+#### 324. Wiggle Sort II
+```java
+/**
+ * 题意：follow up： 只能小于 或 大于，不能小于等于， 大于等于
+ * */
+public class WiggleSortII0324 {
+    /** 时间复杂度 O（n）, space O(1)
+思路 : 先用diy quick sort 找到中位数，然后，中位数左边小于中位数，右边大于中位数
+然后，依次吧后面的大数放到前面的山峰（偶数index），需要注意的时候，如果数组长度是偶数
+那么要从倒数第二个开始，如果是奇数，从倒数第一个开始，逻辑就是把后面的山谷换到前面当山峰
+扫一遍之后，理应结束了，但数组里面有重复元素，所以很有可能有些山峰和山谷是同一个高度
+想一下，可以知道，会导致这种情况的数字只有可能是中位数，因为如果重复数字在前面或者后面，
+重复数字肯定就错开了，they must be staggered 比如 1423999   1929394
+所以，这时候，我们只需要把扫2遍数组，把山峰和山谷上的中位数往两边换
+     如何保证换走后 新位置的正确性呢，
+     因为左边山峰的元素是从后面换过来的，所以肯定比中位数大，
+     而，左边山谷的元素本来就是比中位数小的元素，所以换过去只会更小，所以也成立
+     唯一需要注意的地方就是，要先检查，要换过的位置上，是否已经是中位数了，如果是，就先跳到下一位
+j = (n % 2 == 0) ? (n - 2) : (n - 1) 的意思就是，如果n是偶数，最后一位是山峰
+*/
+    public void wiggleSort(int[] nums) {
+        if (nums == null || nums.length < 2) {
+            return;
+        }
+        int n = nums.length;
+        int mid = findMedian(nums, n / 2);
+        //右山谷换到左山峰
+        for (int i = 1, j = (n % 2 == 0) ? n - 2: n - 1; i < j; i += 2, j -= 2) {
+            swap(nums, i, j);
+        }
+        //把右边山谷的中位数，换到左边山谷
+        for (int i = 0, j = (n % 2 == 0) ? n - 2: n - 1; i < j; j -= 2) {
+            while (i < j && nums[i] == mid) {
+                i += 2;
+            }
+            if (i < j && nums[j] == mid) {
+                swap(nums, i, j);
+                i += 2;
+            }
+        }
+        //把左边山峰的中位数，换到右边山峰
+        for (int i = 1, j = (n % 2 == 1) ? n - 2: n - 1; i < j; i += 2) {
+            while (i < j && nums[j] == mid) {
+                j -= 2;
+            }
+            if (i < j && nums[i] == mid) {
+                swap(nums, i, j);
+                j -= 2;
+            }
+        }
+    }
+    private int findMedian(int[] nums, int k) {
+        int left = 0;
+        int right = nums.length - 1;
+        while (left < right) {
+            int l = left;
+            int r = right;
+            int pivot = nums[l];
+            while (l < r) {
+                while (l < r && nums[r] >= pivot) {
+                    --r;
+                }
+                swap(nums, l, r);
+                while (l < r && nums[l] <= pivot) {
+                    ++l;
+                }
+                swap(nums, l, r);
+            }
+            if (l == k) {
+                return nums[l];
+            } else if (l < k) {
+                left = l + 1;
+            } else {
+                right = r - 1;
+            }
+        }
+        return nums[left];
+    }
+    private void swap(int[] nums, int a, int b) {
+        int tmp = nums[a];
+        nums[a] = nums[b];
+        nums[b] = tmp;
+    }
+}
+
+```
+
+#### 376. Wiggle Subsequence
+```java
+/**
+ * 题意：如果一个序列的相邻数字之差在正数和负数之间交替变换，则称此序列为一个“摆动序列”。第一个差值（如果存在的话）正负均可。
+ * 少于两个元素的序列也被认为是摆动序列。例如，[1,7,4,9,2,5] 是一个摆动序列，因为差值(6,-3,5,-7,3)正负交替。
+ * 反例， [1,4,7,2,5] 以及 [1,7,4,5,5] 不是摆动序列，第一个是因为前两个差值连续为正，第二个是因为最后一个差值是0。
+ * 给定一个整数序列，返回其最长摆动子序列的长度。一个子序列可以通过从原始序列中删除一定数目的（也可以为0）元素得到。
+ * */
+public class WiggleSubsequence0376 {
+    /** time O(n) space O(1) 方法：贪心
+     * 思路：因为第一个数可以是峰也可以是谷，所以，需要枚举2种情况，用一个布尔变量来标记上一个元素是峰还是谷
+     * 如果上一个元素是低谷，且当前元素比它大，那么count加1，布尔标记成峰，反之亦然，
+     * 这里有个点需要注意，如果出现了不符合条件的情况，count自然不加，布尔也不变，当峰或谷的值应该继续变，
+     * 意思就是，如果上一个是峰，当前这个本来应该是要比上一个小的，但现在是比上一个大了，那么布尔不变，(上一个仍然是峰）
+     * 但峰值我们应该选当前这个，而不是上一个，因为当前这个更大，就有更多机会比后面的数大，反之亦然
+     * 所以，i可以一直和 i-1 比。
+     * 优化：
+     * */
+    public int wiggleMaxLength(int[] nums) {
+        if (nums == null || nums.length < 1) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return 1;
+        }
+        return Math.max(getMax(nums, true), getMax(nums, false));
+    }
+    private int getMax(int[] nums, boolean isValley) {
+        int max = 1;
+        for (int i = 1; i < nums.length; ++i) {
+            if (isValley && nums[i] > nums[i - 1]) {
+                isValley = false;
+                ++max;
+            } else if (!isValley && nums[i] < nums[i - 1]) {
+                isValley = true;
+                ++max;
+            }
+        }
+        return max;
+    }
+}
+
+```

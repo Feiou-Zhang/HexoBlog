@@ -339,3 +339,45 @@ Java栈的特点是存取速度快（比堆块），但是空间小，数据生�
 栈有一个特点，就是数据共享。回到我们第一个例子，第五行String str0 = "123"，编译的时候，在常量池中创建了一个常量"123"，然后走第六行String str1 = "123"，先去常量池中找有没有这个"123"，发现有，str1也指向常量池中的"123"，所以第七行的str0 == str1返回的是true，因为str0和str1指向的都是常量池中的"123"这个字符串的地址。当然如果String str1 = "234"，就又不一样了，因为常量池中没有"234"，所以会在常量池中创建一个"234"，然后str1代表的是这个"234"的地址。分析了String，其实其他基本数据类型也都是一样的：先看常量池中有没有要创建的数据，有就返回数据的地址，没有就创建一个。
 
 第二个例子呢？Java虚拟机的解释器每遇到一个new关键字，都会在堆内存中开辟一块内存来存放一个String对象，所以str2、str3指向的堆内存中虽然存储的是相等的"234"，但是由于是两块不同的堆内存，因此str2 == str3返回的仍然是false，网上找到一张图表示一下这个概念：
+### Structure of a program in memory
+1. Data segment 
+2. code segment
+3. Stack
+4. Heap
+```java
+String str1 = new String("hello");
+String str2 = new String("hello");
+
+System.out.print(str1==str2); //return true
+
+String str3 = "hello";
+String str4 = "hello";
+
+System.out.print(str3==str4); //return false
+
+int i = 110;
+int j = 110;
+int k = j;
+System.out.print(i==j); //return true
+System.out.print(i==k); //return true
+
+```
+
+### 堆和栈
+
+简单来说，堆栈都是内存的一部分，但具有不同的功能，
+首先，全局变量 不存在堆栈任何一个里面，是存在data segment里面的
+1. 作用
+栈是用来保存局部变量和局部方法， 堆是用来保存对象的
+2. 线程
+栈上的东西只能可视于自己线程里， 堆是可视于所有线程
+
+3. exception
+* Stack : java.lang.StackOverFlowError
+* Heap: ava.lang.OutOfMemoryError
+
+##### There is another difference between stack and heap which is how they release the space.
+
+* In stack, whenever a method end, the block will be available for the next method automatically.
+* In heap, even if no references point to certain object, 
+that object will still be there until the Garbage Collection clear them up periodically.

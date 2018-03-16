@@ -152,3 +152,26 @@ x = 5;
 x = x + x; //10
 x = x - x; //0
 x = x - x; //0
+
+#### Conversion between char and int
+
+```java
+int i = 'a';
+System.out.println(i); // will print 97
+
+char ch = 97;
+System.out.println(ch); // will print a
+
+char ch = 'A';
+int i = ch;
+System.out.println(i); // will print 65;
+
+int i = 'A';
+char ch = i;
+System.out.println(ch); // will give you a error: possible lossy conversion from int to char
+
+int i = 'A';
+char ch = (char)i;
+System.out.println(i); // will print 65
+
+```
