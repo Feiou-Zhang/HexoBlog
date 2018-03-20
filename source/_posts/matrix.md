@@ -92,6 +92,7 @@ public class SmallestRectangleEnclosingBlackPixels0302 {
 }
 
 ```
+### 最短路径
 #### 317. Shortest Distance from All Buildings
 ```java
 /**
@@ -170,4 +171,48 @@ public class ShortestDistancefromAllBuildings0317 {
         return findBuildings == buildings;
     }
 }
+```
+
+#### 286. Walls and Gates
+
+```java
+
+/**
+ * 题意：给一个二维矩阵，由-1，0， INF 组成，-1代表障碍，0代表门，INF代表空房
+ * */
+public class WallsandGates0286 {
+    /** time O(mn) space O() 方法：从每个gate开始bfs
+     * 思路：依次从每个gate开始做4个方向的bfs，先检查越界问题，然后检查，当前position是否是障碍或门，
+     * 以及是否已经有比现在更短的距离。换成代码就是查看[x][y] 是否大于0，以及是否大于[i][j] + 1，
+     * 如果都满足条件，就更新[x][y]，然后继续bfs
+     * 优化：
+     * */
+    public void wallsAndGates(int[][] rooms) {
+        if (rooms == null || rooms.length == 0 || rooms[0] == null || rooms[0].length == 0) {
+            return;
+        }
+        int[][] directions = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int i = 0; i < rooms.length; ++i) {
+            for (int j = 0; j < rooms[0].length; ++j) {
+                if (rooms[i][j] == 0) {
+                    bfs(directions, rooms, i, j);
+                }
+            }
+        }
+    }
+    private void bfs(int[][] directions, int[][] rooms, int i, int j) {
+        for (int[] direction : directions) {
+            int x = i + direction[0];
+            int y = j + direction[1];
+            if (isValid(rooms, x, y) && rooms[x][y] > rooms[i][j] + 1) {
+                rooms[x][y] = rooms[i][j] + 1;
+                bfs(directions, rooms, x, y);
+            }
+        }
+    }
+    private boolean isValid(int[][] rooms, int x, int y) {
+        return x >= 0 && x < rooms.length && y >= 0 && y < rooms[0].length;
+    }
+}
+
 ```

@@ -397,6 +397,48 @@ public class FindAllAnagramsinaString0438 {
 
 ### 对撞类
 
+#### 611. Valid Triangle Number
+
+```java
+
+/**
+ * 题意：给一个无序数组，求这个数组可以有多少种组合组成三角形，元素不可复用
+ * */
+public class ValidTriangleNumber0611 {
+    /** time O(n^2) space O(1) 方法：3 sum
+     * 思路：先排序，然后按3 sum的方法来做，但又有一点区别，
+     * 3 sum的时候，左右指针，只有其中一个可以移动，这点也保证了算法的正确性，
+     * 单这道题如果完全按照3sum来做，当 12边小于3边的时候，右移2边和左移3边其实都有可能是正确的
+     * 所以，要改动一下，确保只需要移动一条边，仔细想一下，不难想到，可以倒着做，每次固定最后一边
+     * 优化：
+     * */
+    public int triangleNumber(int[] nums) {
+        if (nums == null || nums.length < 3) {
+            return 0;
+        }
+        Arrays.sort(nums);
+        int count = 0;
+        int firstPositive = 0;
+        while (firstPositive < nums.length && nums[firstPositive] < 1) {
+            ++firstPositive;
+        }
+        for (int thirdEdge = nums.length - 1; thirdEdge > firstPositive + 1; --thirdEdge) {
+            int firstEdge = firstPositive;
+            int seconEdge = thirdEdge - 1;
+            while (firstEdge < seconEdge) {
+                if (nums[firstEdge] + nums[seconEdge] <= nums[thirdEdge]) {
+                    ++firstEdge;
+                } else {
+                    count += seconEdge - firstEdge;
+                    --seconEdge;
+                }
+            }
+        }
+        return count;
+    }
+}
+```
+
 #### 382. Triangle Count (LintCode)
 
 ```java
