@@ -668,6 +668,63 @@ public class NumberofIslands0200 {
 
 ```
 
+#### 399. Evaluate Division
+```java
+/**
+ * 题意：已知一个list的 字母pair，以及他们的商，求推出，一组目标pair的商，
+ * 不能求的部分返回-1.0
+ * */
+public class EvaluateDivision0399 {
+    /** time O(E * (Q + E)) e是equation的个数，q是query的个数 space O(E) 方法：dfs
+     * 思路：由于这种传递关系，我们可以先把这种关系以图的形式表现出来，具体是有向带权重的图
+     * 然后，dfs遍历图，因为是dfs，所以肯定要用记录一下节点的访问状态，以防止回路
+     * 具体可以在每一次dfs的时候，把当前分子 加入到一个set里面，如果加不进去，说明已访问过
+     * 而且，这题也有可能根本找不到结果，所以，dfs函数可以返回一个布尔类型
+     * 优化：可以cache结果，也可以用并查集做
+     * */
+    public double[] calcEquation(String[][] equations, double[] values, String[][] queries) {
+        //check edge case first
+        Map<String, Map<String, Double>> map = new HashMap<>();
+        for (int i = 0; i < equations.length; ++i) {
+            buildMap(equations[i][0], equations[i][1], values[i], map);
+        }
+        double[] res = new double[queries.length];
+        for (int i = 0; i < queries.length; ++i) {
+            double[] quotient = new double[] {-1.0d};
+            calculate(queries[i][0], queries[i][1], 1.0d, map, quotient, new HashSet<>());
+            res[i] = quotient[0];
+        }
+        return res;
+    }
+    private void buildMap(String numerator, String denominator, double value,
+                          Map<String, Map<String, Double>> map) {
+        map.putIfAbsent(numerator, new HashMap<>());
+        map.putIfAbsent(denominator, new HashMap<>());
+        map.get(numerator).put(denominator, value);
+        map.get(denominator).put(numerator, 1.0d / value);
+    }
+    private boolean calculate(String numerator, String denominator, double subRes,
+                              Map<String, Map<String, Double>> map, double[] quotient,
+                              Set<String> visited) {
+        if (!map.containsKey(numerator) || !map.containsKey(denominator) || !visited.add(numerator)) {
+            return false;
+        }
+        if (numerator.equals(denominator)) {
+            quotient[0] = subRes;
+            return true;
+        }
+        Map<String, Double> denoMap = map.get(numerator);
+        for (String numeKey : denoMap.keySet()) {
+            if (calculate(numeKey, denominator, subRes * denoMap.get(numeKey), map, quotient, visited)) {
+                return true;
+            }
+        }
+        visited.remove(numerator);
+        return false;
+    }
+}
+
+```
 ### bfs
 
 #### 310. Minimum Height Trees
@@ -898,6 +955,130 @@ public class IsGraphBipartite0785 {
             }
         }
         return true;
+    }
+}
+
+```
+
+### 迷宫
+
+#### 490 The Maze
+```java
+import java.util.Arrays;
+
+/**
+ * 题意：给定一个迷宫，二维矩阵，0代表可以通行，1代表墙，假设4周都是墙
+ * 而且行走路线只能是 每次选定一个方向就要一直走到不能在走位置，
+ * 意思，即使路过终点也不行，
+ * */
+public class TheMaze0490 {
+    /** time O(mn) space O(mn) 方法：dfs
+     * 思路：还是4个方向的dfs，唯一不同就是每次选定一个方向，要把坐标更新到当前path的末端
+     * 需要用一个visited来记录这个末端是否访问过,
+     * 递归函数中，开始先检查当前坐标是否访问过，不用检查越界这里，因为后面只会添加合法的坐标递归
+     * 然后判断当前坐标是否是终点，然后标记当前坐标为访问过，然后做4个方向的dfs
+     * 优化：
+     * */
+    public boolean hasPath(int[][] maze, int[] start, int[] destination) {
+        boolean[][] visited = new boolean[maze.length][maze[0].length];
+        int[][] directions = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        return dfs(maze, start, destination, visited, directions);
+    }
+    private boolean dfs(int[][] maze, int[] start, int[] destination,
+                        boolean[][] visited, int[][] directions) {
+        if (visited[start[0]][start[1]]) {
+            return false;
+        }
+        if (Arrays.equals(start, destination)) {
+            return true;
+        }
+        visited[start[0]][start[1]] = true;
+        for (int[] direction : directions) {
+            int x = start[0];
+            int y = start[1];
+            while (isValid(maze, x + direction[0], y + direction[1])) {
+                x += direction[0];
+                y += direction[1];
+            }
+            if (dfs(maze, new int[] {x, y}, destination, visited, directions)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean isValid(int[][] maze, int x, int y) {
+        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length && maze[x][y] == 0;
+    }
+}
+
+```
+#### 505 The Maze II
+```java
+import java.util.Arrays;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+/**
+ * 题意：找出最短路线的长度
+ * */
+public class TheMazeII0505 {
+    /** time O(mn) space O(mn) 方法：带权重的有向图，单源最短路径，dijkstra
+     * 思路：用一个二维数组记录起点到所有能到达的点的最短距离。初始为int_max
+     * 把从起点能直接到达的所有地方的坐标和距离加入到一个优先队列里面，然后从最近的一个点开始bfs
+     * 每次更新能到达点的最短距离, 如果当前算出来的距离，比二维数组里面的距离小，就更新二维数组，
+     * 然后把当前节点放入队列，直到队列为空，或者找到终点结束
+     * 优化：
+     * */
+    public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+        int[][] visited = new int[maze.length][maze[0].length];
+        int[][] dirs = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int[] v : visited) {
+            Arrays.fill(v, Integer.MAX_VALUE);
+        }
+        visited[start[0]][start[1]] = 0;
+        Queue<Tuple> pq = new PriorityQueue<>();
+        pq.offer(new Tuple(start[0], start[1], 0));
+        while (!pq.isEmpty()) {
+            Tuple curr = pq.poll();
+            if (curr.x == destination[0] && curr.y == destination[1]) {
+                return curr.distance;
+            }
+            for (int[] dir : dirs) {
+                int x = curr.x;
+                int y = curr.y;
+                while (isValid(maze, x + dir[0], y + dir[1])) {
+                    x += dir[0];
+                    y += dir[1];
+                }
+                int distance = curr.distance + Math.abs(x - curr.x) + Math.abs((y - curr.y));
+                if (distance < visited[x][y]) {
+                    visited[x][y] = distance;
+                    pq.offer(new Tuple(x, y, distance));
+                }
+            }
+        }
+        return -1;
+    }
+    private boolean isValid(int[][] maze, int x, int y) {
+        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length && maze[x][y] == 0;
+    }
+    class Tuple implements Comparable{
+        int x;
+        int y;
+        int distance;
+        Tuple (int x, int y, int distance) {
+            this.x = x;
+            this.y = y;
+            this.distance = distance;
+        }
+        @Override
+        public int compareTo(Object t) {
+            Tuple tuple = (Tuple)t;
+            if (tuple == null) {
+                return -1;
+            }
+            return this.distance - tuple.distance;
+        }
     }
 }
 

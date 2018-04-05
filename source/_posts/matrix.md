@@ -216,3 +216,106 @@ public class WallsandGates0286 {
 }
 
 ```
+#### 296. Best Meeting Point
+```java
+/**
+ * 题意：给一个二维矩阵，1代表某人的家，0代表没有房子，求在图中找到任何一个点，
+ * 离所有人家的距离最近
+ * */
+public class BestMeetingPoint0296 {
+    /** time O(mn) space O(m+n) 方法：
+     * 思路：原则上，2点之间的最短距离，就是2点之间的任意点，3点之间的最短距离，肯定是中间的点
+     * 而这个题，可以先假设，所有点都是同一排，或者同一列，最后加起来就是答案
+     * 优化：
+     * */
+    public int minTotalDistance(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0] == null || grid[0].length == 0) {
+            return 0;
+        }
+        List<Integer> rows = new ArrayList<>();
+        List<Integer> cols = new ArrayList<>();
+        for (int i = 0; i < grid.length; ++i) {
+            for (int j = 0; j < grid[0].length; ++j) {
+                if (grid[i][j] == 1) {
+                    rows.add(i);
+                }
+            }
+        }
+        for (int i = 0; i < grid[0].length; ++i) {
+            for (int j = 0; j < grid.length; ++j) {
+                if (grid[j][i] == 1) {
+                    cols.add(i);
+                }
+            }
+        }
+        return getDistance(rows) + getDistance(cols);
+    }
+    private int getDistance(List<Integer> list) {
+        if (list.size() < 2) {
+            return 0;
+        }
+        int distance = 0;
+        int mid = list.get(list.size() / 2);
+        for (int l : list) {
+            distance += Math.abs(l - mid);
+        }
+        return distance;
+    }
+}
+```
+#### flood
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 题意：给一个m x n 二维矩阵，有非负整数组成，假设矩阵上面和左边被太平洋包围，
+ * 下面有右边被大西洋包围，求哪些cell的水既可以流向太平洋，又可以流向大西洋
+ * */
+public class PacificAtlanticWaterFlow0417 {
+    /** time O((m+n)*(m+n)) space O(m*n)，dfs函数的复杂度应该是m+n，然后主函数的两个for loop一个是m一个是n
+     * 因此，复杂度应该是 (m+n)*(m+n)， 方法就是 dfs
+     * 思路：对于每个海洋分别做dfs，比如从太平洋的2条边开始，如果遇到的边大于等于自己，说明水可以留过来，
+     * 用2组 二维布尔数组来记录，最后查看，如果2个海洋的某个点，都是true，说明它可以流向2个海洋
+     * 优化：
+     * */
+    public List<int[]> pacificAtlantic(int[][] matrix) {
+        List<int[]> res = new ArrayList<>();
+        if (matrix == null || matrix.length == 0 || matrix[0] == null || matrix[0].length == 0) {
+            return res;
+        }
+        int[][] directions = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        boolean[][] pacific = new boolean[matrix.length][matrix[0].length];
+        boolean[][] atlantic = new boolean[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; ++i) {
+            dfs(directions, pacific, matrix, i, 0);
+            dfs(directions, atlantic, matrix, i, matrix[0].length - 1);
+        }
+        for (int i = 0; i < matrix[0].length; ++i) {
+            dfs(directions, pacific, matrix, 0, i);
+            dfs(directions, atlantic, matrix, matrix.length - 1, i);
+        }
+        for (int i = 0; i < matrix.length; ++i) {
+            for (int j = 0; j < matrix[0].length; ++j) {
+                if (pacific[i][j] && atlantic[i][j]) {
+                    res.add(new int[] {i, j});
+                }
+            }
+        }
+        return res;
+    }
+    private void dfs(int[][] directions,  boolean[][] visited, int[][] matrix, int i, int j) {
+        visited[i][j] = true;
+        for (int[] direction : directions) {
+            int x = i + direction[0];
+            int y = j + direction[1];
+            if (x >= 0 && x < matrix.length && y >= 0 && y < matrix[0].length &&
+                    !visited[x][y] && matrix[x][y] >= matrix[i][j]) {
+                dfs(directions, visited, matrix, x, y);
+            }
+        }
+    }
+}
+
+```

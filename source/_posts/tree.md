@@ -570,6 +570,50 @@ public class MinimumAbsoluteDifferenceinBST0530 {
 }
 
 ```
+#### 378. Convert Binary Search Tree to Doubly Linked List
+Lintcode
+```java
+/** LintCode
+ * 题意：把一个BST 转化成一个升序双向链表，
+ * */
+public class ConvertBinarySearchTreetoDoublyLinkedList0378 {
+    /** time O() space O() 方法：
+     * 思路：中序遍历，利用一个prev节点
+     * 优化：
+     * */
+    public DoublyListNode bstToDoublyList(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        DoublyListNode head = new DoublyListNode(0);
+        DoublyListNode prev = head;
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        while (root != null || !stack.isEmpty()) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+            DoublyListNode curr = new DoublyListNode(root.val);
+            prev.next = curr;
+            curr.prev = prev;
+
+            prev = prev.next;
+            root = root.right;
+        }
+        head.next.prev = null;
+        return head.next;
+    }
+    public class DoublyListNode {
+        int val;
+        DoublyListNode next, prev;
+        DoublyListNode(int val) {
+            this.val = val;
+            this.next = this.prev = null;
+        }
+    }
+}
+```
 
 ### 第三种情况 - 构建树
 

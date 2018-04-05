@@ -397,6 +397,166 @@ public class FindAllAnagramsinaString0438 {
 
 ### 对撞类
 
+#### 15. 3Sum
+```java
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * 题意：给一个无序，有重 数组，找到所有3个数组之和为0的组合，要求所有解都不重复
+ * */
+public class ThreeSum0015 {
+    /** time O(n^2) space O(1) 方法：排序 加 双指针
+     * 思路：先排序，双循环来做 ，外循环依次遍历每个元素，内循环 用双指针找 差，
+     * 去重的时候，外循环的元素，只要和前一个一样，都可以跳过，
+     * 内循环的时候，找到解之后，如果当前元素和上一个一样的话，
+     * 再跳过， 入股先跳过就会漏解， 比如 0，0，0，0，0
+     * 优化：
+     * */
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length < 3 ) {
+            return res;
+        }
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length - 2; ++i) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            for (int left = i + 1, right = nums.length - 1; left < right; ) {
+                if (nums[i] + nums[left] + nums[right] == 0) {
+                    res.add(addToList(nums[i], nums[left], nums[right]));
+                    ++left;
+                    --right;
+                    while (left < right && nums[left] == nums[left - 1]) {
+                        ++left;
+                    }
+                    while (left < right && nums[right] == nums[right + 1]) {
+                        --right;
+                    }
+                } else if (nums[i] + nums[left] + nums[right] < 0) {
+                    ++left;
+                } else {
+                    --right;
+                }
+            }
+        }
+        return res;
+    }
+    private List<Integer> addToList(int a, int b, int c) {
+        List<Integer> list = new ArrayList<>();
+        list.add(a);
+        list.add(b);
+        list.add(c);
+        return list;
+    }
+}
+
+```
+#### 16. 3Sum Closest
+```java
+/**
+ * 题意：给一个无序数组 找到3个数组的和  与 target 差最小的组合
+ * */
+public class ThreeSumClosest0016 {
+    /** time O(n^2) space O(1) 方法：排序 加 双指针
+     * 思路：一个数固定，后面的数做two sum，然后不断更新closest
+     * 优化：
+     * */
+    public int threeSumClosest(int[] nums, int target) {
+        if (nums == null || nums.length < 3) {
+            return 0;
+        }
+        Arrays.sort(nums);
+        int closest = nums[0] + nums[1] + nums[nums.length - 1];
+        for (int i = 0; i < nums.length - 2; ++i) {
+            for (int left = i + 1, right = nums.length - 1; left < right; ) {
+                int sum = nums[i] + nums[left] + nums[right];
+                if (sum == target) {
+                    return target;
+                } else if (sum < target) {
+                    ++left;
+                } else {
+                    --right;
+                }
+                if (Math.abs(sum - target) < Math.abs(closest - target)) {
+                    closest = sum;
+                }
+            }
+        }
+        return closest;
+    }
+}
+```
+
+#### 18. 4Sum
+```java
+
+/**
+ * 题意：给一个无序有重数组，找到所有4个数的组合等于target
+ * */
+public class FourSum0018 {
+    /** time O(n^3) space O(1) 方法：排序 加 双指针
+     * 思路：3循环，外循环固定i，中循环固定j,内循环做two sum
+     * 注意：在中循环去重的时候，是 if (j > i + 1 && nums[j] == nums[j-1]) 而不是 j > 0
+     * 优化：每次可以先查看i 和 i 后面的 3个数是否大于target，如果是，直接结束
+     * 还可以查看i 和最后面的 3个数，是否 小于target，如果是 就 continue 下个 i
+     * */
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length < 4) {
+            return res;
+        }
+        Arrays.sort(nums);
+        int n = nums.length;
+        for (int i = 0; i < n - 3; ++i) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            for (int j = i + 1; j < n - 2; ++j) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+                if (nums[i] + nums[i + 1] + nums[i + 2] + nums[i + 3] > target) {
+                    return res;
+                }
+                if (nums[i] + nums[n - 3] + nums[n - 2] + nums[n - 1] < target) {
+                    continue;
+                }
+                for (int left = j + 1, right = n - 1; left < right; ) {
+                    int sum = nums[i] + nums[j] + nums[left] + nums[right];
+                    if (sum == target) {
+                        res.add(addToList(nums[i], nums[j], nums[left], nums[right]));
+                        ++left;
+                        --right;
+                        while (left < right && nums[left] == nums[left - 1]) {
+                            ++left;
+                        }
+                        while (left < right && nums[right] == nums[right + 1]) {
+                            --right;
+                        }
+                    } else if (sum < target) {
+                        ++left;
+                    } else {
+                        --right;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+    private List<Integer> addToList(int a, int b, int c, int d) {
+        List<Integer> list = new ArrayList<>();
+        list.add(a);
+        list.add(b);
+        list.add(c);
+        list.add(d);
+        return list;
+    }
+}
+
+```
 #### 611. Valid Triangle Number
 
 ```java

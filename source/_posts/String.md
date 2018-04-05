@@ -206,3 +206,66 @@ public class VerifyPreorderSerializationofaBinaryTree0331 {
     }
 }
 ```
+#### 214. Shortest Palindrome
+```java
+/**
+ * 题意：给一个字符串，求，最少 '在前面' 加多少个字母可以把它变成一个回文，返回改回文
+ * Given "abcd", return "dcbabcd".
+ * */
+public class ShortestPalindrome0214 {
+    /** time O(n) space O(n) 方法：kmp
+     * 思路：假设一个字符串 S前面加P 成为回文，首先，S是由2部分组成，内回文和逆序P，
+     * 也就可以得到 PS = PQP' ，也就可以得到 S = QP' 这时候，如果给S后面加一个S'
+     * 那么就可以得到 SS' = QP'PQ'，而且既然Q 是内回文，那么Q 和 Q' 就是一样的
+     * 那么我们只要能找到原字符串S 的内回文Q 是什么，我们就能知道怎么加P'
+     * 而这个Q 其实就是SS'的公共前后缀，这样我们也就可以用 kmp的next数组来找这个公共前后缀
+     * 优化：少慢点的做法，也可以用二维dp来找到原S中最长的回文子串，需要以原首字母开头
+     * */
+    public String shortestPalindrome(String s) {
+        if (s == null || s.length() < 2) {
+            return s;
+        }
+        String ss = s + "#" + new StringBuilder(s).reverse();
+        int n = ss.length();
+        int[] next = new int[n];
+        for (int i = 0, j = 1; j < n; ++j) {
+            while (i > 0 && ss.charAt(i) != ss.charAt(j)) {
+                i = next[i - 1];
+            }
+            if (ss.charAt(i) == ss.charAt(j)) {
+                next[j] = ++i;
+            }
+        }
+        return new StringBuilder(s.substring(next[n - 1])).reverse().append(s).toString();
+    }
+    public String dp(String s) {
+        if (s == null || s.length() < 2) {
+            return s;
+        }
+        int n = s.length();
+        boolean[][] isPalindrome = new boolean[n + 1][n + 1];
+        isPalindrome[0][0] = true;
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = i; j < n; ++j) {
+                if (s.charAt(i) == s.charAt(j)) {
+                    isPalindrome[i][j] = j - i < 3 || isPalindrome[i + 1][j - 1];
+                }
+            }
+        }
+        int longestPalindromeLength = 0;
+        for (int i = n -1; i >= 0; --i) {
+            if (isPalindrome[0][i]) {
+                longestPalindromeLength = i + 1;
+                break;
+            }
+        }
+        //return new StringBuilder(s.substring(longestPalindromeLength)).reverse().toString() + s;
+        StringBuilder res = new StringBuilder();
+        for (int i = n - 1; i >= longestPalindromeLength; --i) {
+            res.append(s.charAt(i));
+        }
+        return res.append(s).toString();
+    }
+}
+
+```
