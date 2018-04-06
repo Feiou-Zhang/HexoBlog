@@ -272,13 +272,17 @@ public class NextPermutation0031 {
             return;
         }
         int small = nums.length - 2;
-        for (; small >= 0 && nums[small] >= nums[small + 1]; --small);
+        while (small >= 0 && nums[small] >= nums[small + 1]) {
+            --small;
+        }
         if (small < 0) {
             reverse(nums, 0, nums.length - 1);
             return;
         }
         int large = nums.length - 1;
-        for (; nums[large] <= nums[small]; --large);
+        while (nums[large] <= nums[small]){
+            --large;
+        }
         swap(nums, small, large);
         reverse(nums, small + 1, nums.length - 1);
     }
@@ -306,20 +310,25 @@ public class PreviousPermutation0051LintCode {
      * 优化：
      * */
     public List<Integer> previousPermuation(List<Integer> nums) {
-        if (nums.isEmpty() || nums.size() < 2) {
-            return nums;
+        List<Integer> res = new ArrayList<>(nums);
+        if (nums.isEmpty()) {
+            return res;
         }
-        int large = nums.size() - 2;
-        for (; large >= 0 && nums.get(large) <= nums.get(large + 1); --large);
+        int large = res.size() - 2;
+        while (large >= 0 && res.get(large) <= res.get(large + 1)) {
+            --large;
+        }
         if (large < 0) {
-            reverse(nums, 0, nums.size() - 1);
-            return nums;
+            reverse(res, 0, res.size() - 1);
+            return res;
         }
-        int small = nums.size() - 1;
-        for (; nums.get(small) >= nums.get(large); --small);
-        swap(nums, small, large);
-        reverse(nums, large + 1, nums.size() - 1);
-        return nums;
+        int small = res.size() - 1;
+        while (small > large && res.get(small) >= res.get(large)) {
+            --small;
+        }
+        swap(res, small, large);
+        reverse(res, large + 1, res.size() - 1);
+        return res;
     }
     private void reverse(List<Integer> nums, int start, int end) {
         while (start < end) {

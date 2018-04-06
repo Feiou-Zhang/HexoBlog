@@ -690,3 +690,46 @@ public class CountNumberswithUniqueDigits0357 {
 }
 
 ```
+
+### 字符串类
+
+#### 115. Distinct Subsequences
+```java
+/**
+ * 题意：给字符串S 和 T 找到有多少个S的子序列 等于T
+ * 比如 S = "rabbbit", T = "rabbit"  应该 Return 3.
+ * */
+public class DistinctSubsequences0115 {
+    /** time O(n^2) space O(n^2) 方法：dp
+     这个例子很重要
+         b b b
+       1 1 1 1
+     b 0 1 2 3
+     b 0 0 1 3
+     重点： 如果字符不一样，现在的结果完全取决于 没有char s时候的结果，
+     如果一样，那么当前结果就是 没有char s时候的结果 加上 char s 和char t 都没有时候的结果
+     * 优化：可以滚动优化空间
+     * */
+    public int numDistinct(String s, String t) {
+        if (s == null || t == null || s.length()  < t.length()) {
+            return 0;
+        }
+        int sl = s.length();
+        int tl = t.length();
+        int[][] dp = new int[tl + 1][sl + 1];
+        for (int i = 0; i <= sl; ++i) {
+            dp[0][i] = 1;
+        }
+        for (int i = 1; i <= tl; ++i) {
+            for  (int j = 1; j <= sl; ++j) {
+                if (t.charAt(i - 1) != s.charAt(j - 1)) {
+                    dp[i][j] = dp[i][j - 1];
+                } else {
+                    dp[i][j] = dp[i][j - 1] + dp[i - 1][j - 1];
+                }
+            }
+        }
+        return dp[tl][sl];
+    }
+}
+```

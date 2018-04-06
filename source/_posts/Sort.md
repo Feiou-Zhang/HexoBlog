@@ -136,6 +136,59 @@ public class MergeSort {
 }
 ```
 
+#### 148. Sort List
+```java
+/**
+ * 题意：nlogn时间排序链表
+ * */
+public class SortList0148 {
+    /** time O(nlogn) space O(1) 方法：merge sort
+     * 思路：先递归拆分，然后合并，拆分的时候，用快慢指针找mid，然后mid.next = null做分割
+     * 然后分别递归左右两边，递归出口就是，只剩一个节点的情况，就直接返回该节点，
+     * 拆分之后，调用merge函数，合并就可以了
+     * 优化：
+     * */
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode fast = head;
+        ListNode slow = head;
+        ListNode mid = null;
+        while (fast != null && fast.next != null) {
+            mid = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        mid.next = null;
+        ListNode first = sortList(head);
+        ListNode second = sortList(mid);
+        return merge(first, second);
+    }
+    private ListNode merge(ListNode l1, ListNode l2) {
+        ListNode head = new ListNode(0);
+        ListNode tail = head;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                tail.next = l1;
+                l1 = l1.next;
+            } else {
+                tail.next = l2;
+                l2 = l2.next;
+            }
+            tail = tail.next;
+        }
+        if (l1 != null) {
+            tail.next = l1;
+        }
+        if (l2 != null) {
+            tail.next = l2;
+        }
+        return head.next;
+    }
+}
+
+```
 ### 桶排序
 
 #### 561. Array Partition I

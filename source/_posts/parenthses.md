@@ -49,3 +49,50 @@ public class ValidParentheses0020 {
 }
 
 ```
+#### 32. Longest Valid Parentheses
+```java
+/**
+ * 题意：给一个字符串，只包含 开闭括号，求最长的合法括号组合的长度
+ * */
+public class LongestValidParentheses0032 {
+    /** time O(n) space O(n) 方法：stack
+     * 思路：用2个stack, 一个放括号，一个放括号的index，把合法的括号都从stack里面删掉
+     * 剩下的都是不合法的，那么剩下的index 也就是合法括号的区间，更新最值就可以
+     * 初始化要加一个-1 到index的stack里面， 以防止，最开始的部分是合法的 被删掉
+     * 最后再加一个len - 1 到stack，以防止，周后面的部分是合法的，被删掉
+     * 优化：
+     * */
+    public int longestValidParentheses(String s) {
+        if (s == null || s.length() < 2) {
+            return 0;
+        }
+        Deque<Character> parentheses = new ArrayDeque<>();
+        Deque<Integer> indexes = new ArrayDeque<>();
+        indexes.push(-1);
+        for (int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            if (c == '(') {
+                parentheses.push(c);
+                indexes.push(i);
+            }
+            if (c == ')') {
+                if (!parentheses.isEmpty() && parentheses.peek() == '(') {
+                    parentheses.pop();
+                    indexes.pop();
+                } else {
+                    parentheses.push(c);
+                    indexes.push(i);
+                }
+            }
+        }
+        if (indexes.peek() != s.length()) {
+            indexes.push(s.length());
+        }
+        int longest = 0;
+        while (indexes.size() > 1) {
+            longest = Math.max(longest, indexes.pop() - indexes.peek());
+        }
+        return longest - 1;
+    }
+}
+```

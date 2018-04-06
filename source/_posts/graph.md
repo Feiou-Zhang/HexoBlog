@@ -916,6 +916,159 @@ public class CloneGraph0133 {
 
 ### 杂题 图遍历
 
+#### 127. Word Ladder
+```java
+/**
+ * 题意：给一组单词，和一个开始词，和一个结束词，求start 到 end最少的变形次数，
+ * */
+public class WordLadder0127 {
+    /** time O() space O() 方法：
+     * 思路：首先，要理解，从a到b 和从b到a 的距离肯定是一样的，那么从a 延伸出来的，下一层的group单词
+     * 到 b的距离，和b到 这个group的距离也是一样，而且，在group里面找b的时间肯定小于， 遍历group的时间
+     * 由此可以推断出，这个题可以用双向 bfs 优化，
+     * 具体步骤就是，把常规的 队列换成 set，也就是 下一层，如果本轮没找到答案，那么下一轮，就把 下层和end
+     * size更小的当做 begin
+     * 需要注意到是，找邻居的时候，把邻居添加到下层 set里面的时候，要同时从bank中移除，不然之后会重复添加
+     * 优化：找邻居的时候，也可以 反向遍历26个字母，时间复杂度 从 n * l 降为 25 * l
+     * */
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Set<String> bank = new HashSet<>(wordList);
+        Set<String> begin = new HashSet<>(Collections.singleton(beginWord));
+        Set<String> end = new HashSet<>(Collections.singleton(endWord));
+        return bank.contains(endWord) ? biBFS(begin, end, bank, 2) : 0;
+    }
+    private int biBFS(Set<String> begin, Set<String> end, Set<String> bank, int level) {
+        if (begin.size() == 0) {
+            return 0;
+        }
+        Set<String> nextLevel = new HashSet<>();
+        for (String b : begin) {
+            char[] chars = b.toCharArray();
+            for (int i = 0; i < chars.length; ++i) {
+                char temp = chars[i];
+                for (char c = 'a'; c <= 'z'; ++c) {
+                    if (temp != c) {
+                        chars[i] = c;
+                        String curr = new String(chars);
+                        if (end.contains(curr)) {
+                            return level;
+                        }
+                        if (bank.remove(curr)) {
+                            nextLevel.add(curr);
+                        }
+                    }
+                }
+                chars[i] = temp;
+            }
+        }
+        return nextLevel.size() < end.size() ? biBFS(nextLevel, end, bank, level + 1) :
+                biBFS(end, nextLevel, bank, level + 1);
+    }
+}
+
+```
+
+#### 126. Word Ladder II
+```java
+/**
+ * 题意：给一组单词，和一个开始词，和一个结束词，求start 到 end最少的变形次数，
+ * 这一问是 打印出所有最短路径
+ * */
+public class WordLadderII0126 {
+    /** time O() space O() 方法：
+     * 思路：从 end 到 start 做一个bfs找最短路径先，然后cache所有单词到end的距离（层数),
+     * bfs里面用一个findNeighbor函数，用25L 的时间找到所有邻居，加入queue 和map
+     * 然后bfs 返回最短路径的长度，并且build 这个map，
+     * 然后再从前往后做dfs，遍历，wordset，当path的size 等于最短路径的长度时，加入结果
+     * 每次只选择离end更近的单词，也就是先看当前单词是否在map里面，然后看距离是否更近，然后查看是否是邻居
+     * 都符合的话，进行下一轮的dfs
+     * 优化：
+     * */
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        List<List<String>> res = new ArrayList<>();
+        Set<String> wordBank = new HashSet<>(wordList);
+        Map<String, Integer> disMap = new HashMap<>();
+        disMap.put(endWord, 1);
+        int shortest = bfs(disMap, wordBank, beginWord, endWord);
+        List<String> path = new ArrayList<>();
+        path.add(beginWord);
+        dfs(disMap, wordBank, beginWord, 1, res, new ArrayList<>(path), shortest);
+        return res;
+    }
+    private void dfs(Map<String, Integer> disMap, Set<String> wordBank, String beginWord,
+                     int distance, List<List<String>> res, List<String> path, int shortest) {
+        if (path.size() == shortest) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (String word : wordBank) {
+            if (disMap.containsKey(word) && disMap.get(word) == shortest - distance &&
+                    isNeighbor(beginWord, word)) {
+                path.add(word);
+                dfs(disMap, wordBank, word, distance + 1, res, path, shortest);
+                path.remove((path.size() - 1));
+            }
+        }
+    }
+    private int bfs(Map<String, Integer> disMap, Set<String> wordBank, String beginWord, String endWord) {
+        if (!wordBank.contains(endWord) || beginWord.equals(endWord)) {
+            return 0;
+        }
+        Deque<String> queue = new ArrayDeque<>();
+        queue.offer(endWord);
+        int level = 2;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; ++i) {
+                String word = queue.poll();
+                if (findNeighbor(queue, disMap, wordBank, word.toCharArray(), level, beginWord)) {
+                    return level;
+                }
+            }
+            ++level;
+        }
+        return -1;
+    }
+    private boolean isNeighbor(String a, String b) {
+        int diff = 0;
+        if (a.length() != b.length()) {
+            return false;
+        }
+        for (int i = 0; i < a.length(); ++i) {
+            if (a.charAt(i) != b.charAt(i)) {
+                if (++diff > 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    private boolean findNeighbor(Deque<String> queue, Map<String, Integer> disMap,
+                                 Set<String> wordBank, char[] word, int level, String beginWord) {
+        for (int i = 0; i < word.length; ++i) {
+            char tmp = word[i];
+            for (char c = 'a'; c <= 'z'; ++c) {
+                if (tmp != c) {
+                    word[i] = c;
+                    String newWord = new String(word);
+                    if (newWord.equals(beginWord)) {
+                        disMap.put(newWord, level);
+                        return true;
+                    }
+                    if (wordBank.contains(newWord) && !disMap.containsKey(newWord)) {
+                        queue.offer(newWord);
+                        disMap.put(newWord, level);
+                    }
+                }
+            }
+            word[i] = tmp;
+        }
+        return false;
+    }
+}
+
+```
+
 #### 785. Is Graph Bipartite?
 ```java
 /**
