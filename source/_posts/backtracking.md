@@ -521,7 +521,7 @@ public class CombinationSum0039 {
             return;
         }
         for (int i = index; i < candidates.length; ++i) {
-            if (sum >= target) {
+            if (sum > target) {
                 return;
             }
             curr.add(candidates[i]);

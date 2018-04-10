@@ -4,6 +4,11 @@ date: 2018-02-13 03:49:54
 tags: [dp]
 categories: [Algorithm]
 ---
+满足下面三个条件之一
+1. 求最大，或最小值
+2. 判断是否可行
+3. 统计方案个数
+
 其中一种动态规划的解题思路： 如果一个n的问题，是否可以同过保存 n-1 规模的问题的答案 和 n 来解决，并思考正反2个方向
 
 
@@ -617,6 +622,36 @@ public class PaintFence0276 {
 ```
 
 ### 不好分类
+
+#### 120. Triangle
+```java
+
+/**
+ * 题意：数字三角形，找到一条路径从顶点到底部 的 和最小
+ * */
+public class Triangle0120 {
+    /** time O(n^2) space O(n) 方法：dp
+     * 思路：有点像bubble sort，自下而上的把小的数都 加 到上面
+     * 原理上其实本身是可以做一个自上而下的dfs，但由于有大量的重复计算，可以用cache 局部结果
+     * 所以就可以先把所有局部结果算出来，也就自然而然的可以用dp来解决
+     * 优化：
+     * */
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int n = triangle.size();
+        int[] sum = new int[n];
+        for (int i = 0; i < n; ++i) {
+            sum[i] = triangle.get(n - 1).get(i);
+        }
+        for (int i = n - 2; i >= 0; --i) {
+            int size = triangle.get(i).size();
+            for (int j = 0; j < size; ++j) {
+                sum[j] = triangle.get(i).get(j) + Math.min(sum[j], sum[j + 1]);
+            }
+        }
+        return sum[0];
+    }
+}
+```
 
 #### 634. Find the Derangement of An Array
 ```java

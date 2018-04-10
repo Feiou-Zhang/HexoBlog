@@ -274,6 +274,75 @@ public class SortColors0075 {
 }
 
 ```
+#### 143. Sort Colors II
+ ```java
+
+/**
+ * 题意：排序 无序数组，里面有k种元素，1到k*/
+public class SortColorsII0143LintCode {
+    /** time O(n^2) space O(1) 方法：桶排序，或者k way partition
+     * 思路：桶排序直观，但需要额外空间，
+     * 优化：如果需要inplace做的话，需要用partition，
+     * 方法就是 start 和end 记录当前的2种颜色
+     * 左右指针来做 two way partition，每次做完一次，更新下2个颜色
+     * 方法3，用原数组当做bucket 做counting sort，把当前元素的 原位置，用负数做count
+     * */
+    public void sortColors2(int[] colors, int k) {
+        if (colors == null || colors.length < 2) {
+            return;
+        }
+        int startColor = 1;
+        int endColor = k;
+        int left = 0;
+        int right = colors.length - 1;
+        while (startColor < endColor) {
+            int i = left;
+            while (i <= right) {
+                if (colors[i] == endColor) {
+                    swap(colors, i, right--);
+                } else if (colors[i] == startColor) {
+                    swap(colors, i++, left++);
+                } else {
+                    ++i;
+                }
+            }
+            ++startColor;
+            --endColor;
+        }
+    }
+    private void swap (int[] nums, int a, int b) {
+        int tem = nums[a];
+        nums[a] = nums[b];
+        nums[b] = tem;
+    }
+    public void sortColors3(int[] colors, int k) {
+        if (colors == null || colors.length < 2) {
+            return;
+        }
+        for (int i = 0; i < colors.length; ++i) {
+            while (colors[i] > 0) {
+                int num = colors[i];
+                if (colors[num - 1] <= 0) {
+                    --colors[num - 1];
+                    colors[i] = 0;
+                } else {
+                    colors[i] = colors[num - 1];
+                    colors[num - 1] = -1;
+                }
+            }
+        }
+        int j = colors.length - 1;
+        while (j >= 0) {
+            int count = -colors[k - 1];
+            for (int c = 0; c < count; ++c) {
+                colors[j--] = k;
+            }
+            --k;
+        }
+    }
+}
+
+```
 #### 215. Kth Largest Element in an Array
 ```java
 /**

@@ -1,5 +1,5 @@
 ---
-title: bitmanipu
+title: 位运算
 date: 2018-03-12 11:32:01
 tags: [Bit Manipulation]
 categories: [Java 基础]
