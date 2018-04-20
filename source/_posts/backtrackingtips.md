@@ -45,7 +45,7 @@ subset的话，并不需要一个明确的退出条件，所以，在进入递�
 
 320. Generalized Abbreviation
 首先缩写肯定是要从第一位开始的，如果从后面开始，就miss了一些字符，肯定就错了，所以不用for循环
-其次，也肯定是要做的当前走到哪个index了，所以，递归也传入index，并且index要加一
+其次，也肯定是要记得当前走到哪个index了，所以，递归要传入index，并且index要加一
 这题的重点是，abbreviate的时候如何回溯，因为毕竟当时没有加入任何东西到stringbuilder里面
 所以，这个题要在加入结果后，也回溯，这样就可以把最后没走到情况二的分支也回溯
 
@@ -68,6 +68,7 @@ if (used[i] || i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) { continue; }
 因为map回溯之后，是可以回头选择之前的字符的，而且，当前字符也可能有多个，需要重复选择
 但对于解，是有left 和 right 2个 `index`的，每层只把字符添加到当前的left 和 right index上。
 而下层就要从left-1 和right+1 开始继续。直到left或right 出界为止    
+
 #### 退出时扔需要回溯
 320. Generalized Abbreviation
 

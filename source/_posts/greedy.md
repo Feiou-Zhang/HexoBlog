@@ -5,7 +5,67 @@ tags: [Greedy]
 categories: [Algorithm]
 ---
 
+#### 55. Jump Game
+```java
+/**
+ * 题意：给一个数组，每个元素代表可以走到的最远距离，验证是否可以走到终点
+ * */
+public class JumpGame0055 {
+    /** time O(n) space O(1) 方法：贪心
+     * 思路：不断更新可以到达的最远距离
+     * 优化：
+     * */
+    public boolean canJump(int[] nums) {
+        //edge case
+        if (nums == null || nums.length == 0) {
+            return false;
+        }
+        int reach = nums[0];
+        for (int i = 0; i <= reach; ++i) {
+            reach = Math.max(reach, nums[i] + i);
+            if (reach >= nums.length - 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+#### 45. Jump Game II
+```java
 
+/**
+ * 题意：给一个数组，每个元素代表可以走到的最远距离，求最少几步可以走到终点 
+ * */
+public class JumpGameII0045 {
+    /** time O(n) space O(1) 方法：贪心
+     * 思路：遍历数组，记录一个当前step能走到的最远的值，和下一步能走到的最远的值
+     * 每次循环，先检查当前的 currmax是否能到达终点，如果是 ，直接返回步数
+     * 然后更新一下 全局的最远距离，并查看 当前的i是不是到currmax， 如果是，++步数
+     * 并更新currmax 为 全局最远距离
+     * 优化：
+     * */
+    public int jump(int[] nums) {
+        if (nums == null || nums.length < 2 || nums[0] == 0) {
+            return 0;
+        }
+        int currMax = nums[0];
+        int max = nums[0];
+        int minSteps = 1;
+        for (int i = 1; i < nums.length; ++i) {
+            if (currMax >= nums.length - 1) {
+                return minSteps;
+            }
+            max = Math.max(max, nums[i] + i);
+            if (currMax == i) {
+                ++minSteps;
+                currMax = max;
+            }
+        }
+        return minSteps;
+    }
+}
+```
 
 #### 435. Non-overlapping Intervals
 ```java

@@ -883,14 +883,8 @@ public class CloneGraph0133 {
         }
         return map.get(node);
     }
-    class UndirectedGraphNode {
-        int label;
-        List<UndirectedGraphNode> neighbors;
-        UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
-    }
-}
-    /** dfs solution
-    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+    //dfs
+    public UndirectedGraphNode cloneGraphDFS(UndirectedGraphNode node) {
         if (node == null) {
             return node;
         }
@@ -910,7 +904,7 @@ public class CloneGraph0133 {
             map.get(node).neighbors.add(map.get(n));
         }
     }
-     */
+}
 
 ```
 

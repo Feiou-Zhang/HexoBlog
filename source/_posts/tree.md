@@ -131,6 +131,25 @@ public class InorderSuccessorinBST0285 {
         }
         return succ;
     }
+    public TreeNode inorderSuccessor1(TreeNode root, TreeNode p) {
+        TreeNode successor = null;
+        if (p.right != null) {
+            successor = p.right;
+            while (successor.left != null) {
+                successor = successor.left;
+            }
+            return successor;
+        }
+        while (root != null) {
+            if (root.val > p.val) {
+                successor = root;
+                root = root.left;
+            } else {
+                root = root.right;
+            }
+        }
+        return successor;
+    }
 }
 
 ```
@@ -171,8 +190,8 @@ public class DeleteNodeinaBST0450 {
      * 如果等于root，有3种情况，1。root为leaf，直接删除
      * 2. root 只有左孩子或只有右孩子，那么直接用root父节点。指向左或右节点即可
      * 3. root同时有左右孩子，那么就可以先swap一下root和他的后继或前驱。然后删除后继或前驱
-     * 因为后继和前驱必定是叶子
-     * 注意，删除前驱不能直接 前驱=null，需要递归调用来删除前驱
+     * 这时候这个后继或者前驱节点， 就转换成了 前2种简单情况
+     * 只需要再次调用递归函数 删掉先驱或者 后继节点就可以了
      * 优化：
      * */
     public TreeNode deleteNode(TreeNode root, int key) {
@@ -189,7 +208,7 @@ public class DeleteNodeinaBST0450 {
             if (root.left != null && root.right != null) {
                 TreeNode pre = findPre(root.left);
                 root.val = pre.val;
-                root.left = deleteNode(root.left, root.val);
+                root.left = deleteNode(root.left, pre.val);
                 return root;
             }
             return root.left == null ? root.right : root.left;
@@ -197,7 +216,9 @@ public class DeleteNodeinaBST0450 {
         return root;
     }
     private TreeNode findPre(TreeNode node) {
-        for (; node.right != null; node = node.right);
+        while (node.right != null) {
+            node = node.right;
+        }
         return node;
     }
 }

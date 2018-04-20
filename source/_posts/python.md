@@ -1,6 +1,6 @@
 ---
 title: 学习Python
-date: 2018-03-09 13:18:06
+date: 2017-03-09 13:18:06
 tags: [Python]
 categories: [Learn]
 ---

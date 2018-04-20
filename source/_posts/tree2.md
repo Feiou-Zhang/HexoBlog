@@ -151,3 +151,25 @@ public class BalancedBinaryTree0110 {
 }
 
 ```
+#### 104. Maximum Depth of Binary Tree
+```java
+/**
+ * 题意：求二叉树的最大深度
+ * */
+public class MaximumDepthofBinaryTree0104 {
+    /** time O(n) space O(h) 方法：递归
+     * 思路：dfs, 如果是null就返回0，如果是叶子就返回1，
+     * 然后 当前 root的高度 就是 递归（左子树） 和 递归（右子树）更大的高度 加1
+     * 优化：
+     * */
+    public int maxDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return 1;
+        }
+        return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+    }
+}
+```

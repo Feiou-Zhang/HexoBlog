@@ -17,6 +17,289 @@ categories: [Algorithm]
 2. 无后效性  将各阶段按照一定的次序排列好之后，对于某个给定的阶段状态，它以前各阶段的状态无法直接影响它未来的决策，而只能通过当前的这个状态。换句话说，每个状态都是过去历史的一个完整总结。这就是无后向性，又称为无后效性。
 
 3. 子问题的重叠性  动态规划将原来具有指数级时间复杂度的搜索算法改进成了具有多项式时间复杂度的算法。其中的关键在于解决冗余，这是动态规划算法的根本目的。动态规划实质上是一种以空间换时间的技术，它在实现的过程中，不得不存储产生过程中的各种状态，所以它的空间复杂度要大于其它的算法。
+
+### 背包问题
+
+`每个物品只能选择一次`
+#### 92. Backpack 
+```java
+/**
+ * 题意：给n个物品，用数组A表示，m代表背包的总size，求最大能装多满
+ * */
+public class Backpack0092 {
+    /** time O(mn) space O(m) 方法：dp
+     * 思路：注意这个题，每个硬币只能用一次 ，所以 外循环遍历硬币，内循环 反向 循环 总价
+     * 如果正向循环总价会变成可以重复使用硬币，因为前面的结果会影响后面的结果
+     * 优化：
+     * */
+    public int backPack(int m, int[] A) {
+        if (A == null || A.length == 0 || m < 1) {
+            return 0;
+        }
+        int[] max = new int[m + 1];
+        for (int value : A) {
+            for (int i = m; i >= value; --i) {
+                max[i] = Math.max(max[i], value + max[i - value]);
+            }
+        }
+        return max[m];
+    }
+    public int backPack2(int m, int[] A) {
+        if (A == null || A.length == 0 || m < 1) {
+            return 0;
+        }
+        boolean[] max = new boolean[m + 1];
+        max[0] = true;
+        for (int value : A) {
+            for (int i = m; i >= value; --i) {
+                max[i] = max[i] || max[i - value];
+            }
+        }
+        for (int i = m; i > 0; --i) {
+            if (max[i]) {
+                return i;
+            }
+        }
+        return 0;
+    }
+}
+
+```
+#### 125. Backpack II
+```java
+/**
+ * 题意：N个物品，A数组表示每个物品的重量，V数组表示每个物品的价值，
+ * 背包的负重最大为m，求最大价值
+ * */
+public class BackpackII0125 {
+    /** time O(mn) space O(mn) 优化 空间 n 方法：dp
+     * 思路：空间mn的方法和上题一直，只不过 ，选当前物品的时候，要加上当前物品的价值
+     * 空间o(n)的思路，一维数组表示重量 0到m 可以装的最大价值的DP cache，
+     * 外层循环选不同重量的物品， 内层循环循环重量，
+     * 这里要注意，内层 需要倒着循环，也就是从m开始，因为，如果从前开始循环，之前的结果就会影响之后的结果
+     * 因为每个物品只能选一次，如果从前往后循环，就有可能会多次选到同一个物品
+     * 优化：空间优化
+     * */
+    public int backPackII2(int m, int[] A, int[] V) {
+        int[] maxValue = new int[m + 1];
+        for (int i = 0; i < A.length; ++i) {
+            for (int j = m; j >= A[i]; --j) {
+                maxValue[j] = Math.max(maxValue[j], maxValue[j - A[i]] + V[i]);
+            }
+        }
+        return maxValue[m];
+    }
+}
+
+```
+#### 563. Backpack V
+```java
+/**
+ * 题意：给你个物品，和一个背包的总容量，找到有多少种可以装满背包的方法
+ * 每个物品只能用一次
+ * */
+public class BackpackV0563 {
+    /** time O(mn) space O(m) 方法：dp
+     * 思路：不能重复选择相同物品，还是在遍历重量的时候，逆向遍历
+     * 当前重量的种类数，就是当前种类 + 不用当前物品时候的重量 的种类数
+     * 优化：
+     * */
+    public int backPackV(int[] nums, int target) {
+        int[] ways = new int[target + 1];
+        ways[0] = 1;
+        for (int weight : nums) {
+            for (int i = target; i >= weight; --i) {
+                ways[i] += ways[i - weight];
+            }
+        }
+        return ways[target];
+    }
+}
+```
+#### 416. Partition Equal Subset Sum
+```java
+/**
+ * 题意：给一个数组，看是不是能把这个数组分成和相等的两部分
+ * */
+public class PartitionEqualSubsetSum0416 {
+    /** time O(mn) space O(m) 方法：dp 背包
+     * 思路：可以把这道题转换成一个背包问题，如果能分成相等的两部分，那么这些元素就必定可以组成 二分之一和
+     * 优化：
+     * */
+    public boolean canPartition(int[] nums) {
+        if (nums == null || nums.length < 2) {
+            return false;
+        }
+        int volume = getSum(nums);
+        if (volume % 2 == 1) {
+            return false;
+        }
+        volume /= 2;
+        boolean[] canFilled = new boolean[volume + 1];
+        canFilled[0] = true;
+        for (int num : nums) {
+            for (int i = volume; i >= num; --i) {
+                canFilled[i] = canFilled[i] || canFilled[i - num];
+            }
+        }
+        return canFilled[volume];
+    }
+    private int getSum(int[] nums) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        return sum;
+    }
+}
+
+```
+`每个物品可以选择多次`
+
+#### 440. Backpack III
+```java
+/**
+ * 题意：N个物品，A数组表示每个物品的重量，V数组表示每个物品的价值，
+ * 背包的负重最大为m，求最大价值，物品可以重复选择
+ * */
+public class BackpackIII440 {
+    /** time O(mn) space O(n) 方法：dp
+     * 思路：可以重复选择物品的情况就更简单了，内循环正着循环就可以
+     * 优化：
+     * */
+    public int backPackIII(int[] A, int[] V, int m) {
+        int[] maxValue = new int[m + 1];
+        for (int i = 0; i < A.length; i++) {
+            for (int j = A[i]; j <= m; j++) {
+                maxValue[j] = Math.max(maxValue[j], maxValue[j - A[i]] + V[i]);
+            }
+        }
+        return maxValue[m];
+    }
+}
+```
+#### 562. Backpack IV 
+```java
+/**
+ * 题意：给无序无重数组和一个target，求有多少种可以组成target的组合，
+ * 重复选择+唯一排列+装满可能性总数
+ * */
+public class BackpackIV0562 {
+    /** time O() space O() 方法：
+     * 思路：其实就是combination sum简易版，不用打出所有组合，只要求返回 可能性总数
+     * 只求总数，应该可以想到用dp, 首先初始dp[0] = 1
+     * 用一个dp array存0到target的可能组合数，dp[i]的组合数可以根据之前组合数求得。 
+     * dp[i] += dp[i - num[i]]
+     * 优化：
+     * */
+    public int backPackIV(int[] nums, int target) {
+        int[] combinations = new int[target + 1];
+        combinations[0] = 1;
+        for (int num : nums) {
+            for (int i = num; i <= target; ++i) {
+                combinations[i] += combinations[i - num];
+            }
+        }
+        return combinations[target];
+    }
+}
+```
+#### 322. Coin Change
+```java
+/**
+ * 题意：给一些不同面额的硬币，每个硬币有无限个，和一个总价，求组成这个总价的最少的硬币需要多少
+ * 如果不能组成返回-1
+ * */
+public class CoinChange0322 {
+    /** time O(mn) space O(m) 方法：dp
+     * 思路：外循环硬币的种类，内循环总价从当前硬币的价值到m
+     * 当前总价需要的硬币数量，就是当前总价不用当前硬币时候的数量加1，前提是不用当前硬币的时候用解
+     * 优化：
+     * */
+    public int coinChange(int[] coins, int amount) {
+        if (coins == null || coins.length == 0 || amount < 0) {
+            return -1;
+        }
+        int[] min = new int[amount + 1];
+        Arrays.fill(min, Integer.MAX_VALUE);
+        min[0] = 0;
+        for (int value : coins) {
+            for (int i = value; i <= amount; ++i) {
+                if (min[i - value] != Integer.MAX_VALUE) {
+                    min[i] = Math.min(min[i], min[i - value] + 1);
+                }
+            }
+        }
+        return min[amount] == Integer.MAX_VALUE ? -1 : min[amount];
+    }
+}
+
+```
+#### 518. Coin Change 2
+```java
+/**
+ * 题意：给一些不同面额的硬币，每个硬币有无限个，和一个总价，求组成这个总价的不同组合一共有多少种
+ * 比如硬币为[1,2,5]，总价为5，一共有4种组合 [1，1，1，1，1], [2,1,1,1], [2,2,1], [5]
+ * */
+public class CoinChangeII0518 {
+    /** time O(mn) space O(m) 方法：dp
+     * 思路：外循环硬币的种类，内循环总价从当前硬币的价值到m
+     * 组成当前总价的种类，就是当前总价的种类，加上不用当前硬币可以组成的种类
+     * 优化：
+     * */
+    public int change(int amount, int[] coins) {
+        int[] ways = new int[amount + 1];
+        ways[0] = 1;
+        for (int value : coins) {
+            for (int i = value; i <= amount; ++i) {
+                ways[i] += ways[i - value];
+            }
+        }
+        return ways[amount];
+    }
+}
+
+```
+
+#### 279. Perfect Squares
+```java
+/**
+ * 题意：给一个正数n，求最少可以用几个完美平方数，组成 n，
+ * 比如n等于12，最少需要3个 4， 4 是2的平方， 如果n等于13，则需要2，4 和 9
+ * */
+public class PerfectSquares0279 {
+    /** time O() space O() 方法：背包问题包装
+     * 思路：线找出所有n以内的完美平方数，然后用dp背包来解
+     * 优化：可以优化成空间O（1）
+     * */
+    public int numSquares(int n) {
+        List<Integer> nums = new ArrayList<>();
+        for (int i = 1; i <= Math.sqrt(n); ++i) {
+            nums.add(i * i);
+        }
+        int[] min = new int[n + 1];
+        Arrays.fill(min, Integer.MAX_VALUE);
+        min[0] = 0;
+        for (int num : nums) {
+            for (int i = num; i <= n; ++i) {
+                if (min[i - num] != Integer.MAX_VALUE) {
+                    min[i] = Math.min(min[i], min[i - num] + 1);
+                }
+            }
+        }
+        return min[n];
+    }
+    public int numSquares2(int n) {
+        int[] min = new int[n + 1];
+        for (int i = 1; i * i <= n; ++i) {
+            for (int j = i * i; j <= n; ++j) {
+                min[j] = i == 1 ? j : Math.min(min[j], min[j - i * i] + 1);
+            }
+        }
+        return min[n];
+    }
+}
+```
 ### House Robber 系列
 
 #### 198. House Robber
@@ -727,7 +1010,145 @@ public class CountNumberswithUniqueDigits0357 {
 ```
 
 ### 字符串类
+#### 10. Regular Expression Matching
+```java
+/**
+ * 题意：看 string pattern和stirng s 是否等价
+ * pattern 中 有。和*， 。可以代表任何单个字母
+ * *可以代表任意或者0个之前的字母 比如 a* 可以代表n个a 或者空
+ * */
+public class RegularExpressionMatching0010 {
+    /** time O(n方) space O(n方) 方法：dp
+     * 思路：首先要排除几种情况，比如，*不能再第一位，*和*不能相连。没意义
+     * 其次，就是初始化的时候，要注意，a*b* 对应s为空的时候应该是 true
+     * 转移方程：p是. 或者p，s字符相同 就看左上角，相当于，假设没有这两个字符的情况
+     * 如果是p是*，那么就有2种情况，1，有0个*前面的字母，2.有n个*前面的字母
+     * 有0个的话，那么就看dp[i][j-2], 如果有n个话，就看dp[i-1][j]
+     * 注意 ： 但都是要在 p-1是。 或者p-1等于t的情况下
+     *                   0个*前面字母              那个*前面字母
+         a . c * b           a a *                   b a c *
+       T F F F F F         T F F F                 T F F F F
+     a F T F F F F       a F T F T               b F T F F F
+     a F F T F F F                               a F F T F F
+     c F F F T T F                               c F F F T T
+     c F F F F T F                               c F F F F T
+     b F F F F F T                               c F F F F T
+     * 优化：
+     * */
+    public boolean isMatch(String s, String p) {
+        if (s == null || p == null) {
+            return false;
+        }
+        int slen = s.length();
+        int plen = p.length();
+        if (slen == 0 && plen == 0) {
+            return true;
+        }
+        if (!isValid(p)) {
+            return false;
+        }
+        boolean[][] isMatch = new boolean[slen + 1][plen + 1];
+        isMatch[0][0] = true;
+        for (int i = 2; i <= plen && p.charAt(i - 1) == '*'; i += 2) {
+            isMatch[0][i] = true;
+        }
+        for (int i = 1; i <= slen; ++i) {
+            for (int j = 1; j <= plen; ++j) {
+                if (p.charAt(j - 1) == '.' || p.charAt(j - 1) == s.charAt(i - 1)) {
+                    isMatch[i][j] = isMatch[i - 1][j - 1];
+                }
 
+                if (p.charAt(j - 1) == '*') {
+                    isMatch[i][j] = isMatch[i][j - 2] || isMatch[i - 1][j] &&
+                            ((p.charAt(j - 2) == '.' || p.charAt(j - 2) == s.charAt(i - 1)));
+                }
+            }
+        }
+        return isMatch[slen][plen];
+    }
+    private boolean isValid(String p) {
+        if (p == null || p.length() == 0 || p.charAt(0) == '*') {
+            return false;
+        }
+        for (int i = 1; i < p.length(); ++i) {
+            if (p.charAt(i) == '*' && p.charAt(i - 1) == '*') {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+```
+
+#### 44. Wildcard Matching
+```java
+/**
+ 字符串匹配，？代表任何单一字符 *代表 任何空或序列字符
+     * a . b
+   T T F F F
+ a F T T T F
+ a F T T T F
+ c F T F T F
+ b F T F F T
+ */
+public class WildcardMatching0044 {
+    /** time O(n^2) space O(n^2)
+     * 思路：用dp， 状态，初始条件，转移方程，结果， 如果最后一步可以匹配，那么必定前面有 匹配的子串
+     * 状态： true 和 false
+     * 初始条件：当2个str都为空的时候，dp[0][0] 应该是true, 如果只有p为空，s不为空，那么肯定就false了
+     * 但如果s为空，p还可以有一个或多个**对应，所以，应该首先初始一下第一行和第一列
+     * 另外，其实这题里面如果多个**相邻是没什么意义的，这里可以做个小优化，把相邻的**合为一个
+     * 画个2D矩阵局，就可以发现，一些规律，可以先分成2种情况，为* 和 不为*
+     * 不为*，如果当前2个字母一样，或者p是？的时候，当前位置是否匹配就取决于 左上角的结果，
+     * 原因是： 假设没有这2个字母，之前如果是true那么现在肯定还是true
+     * 为* 的情况 又可以分成2种情况，一种就是*代表空，一种是*代表多个其他字母
+     * 如果*代表空的话，当前的结果应该就是看左边的结果，意思就是假设没有*的情况，之前是结果
+     * 如果*代表其他一些字母的话，当前的结果应该就是看上面的结果，意思就是假设*已经代替了某些字母的的结果
+     * */
+    public boolean isMatch(String s, String p) {
+        if (s == null || p == null) {
+            return false;
+        }
+        if (s.length() == 0 && p.length() == 0) {
+            return true;
+        }
+        if (p.length() == 0) {
+            return false;
+        }
+        p = removeDuplicateStars(p);
+        if (s.length() == 0) {
+            return p.length() == 1 && p.charAt(0) == '*';
+        }
+        boolean[][] match = new boolean[s.length() + 1][p.length() + 1];
+        match[0][0] = true;
+        match[0][1] = p.charAt(0) == '*';
+        for (int i = 1; i <= s.length(); ++i) {
+            for (int j = 1; j <= p.length(); ++j) {
+                if (p.charAt(j - 1) == '*') {
+                    match[i][j] = match[i][j - 1] || match[i - 1][j];
+                } else if (p.charAt(j - 1) == '?' || s.charAt(i - 1) == p.charAt(j - 1)) {
+                    match[i][j] = match[i - 1][j - 1];
+                }
+            }
+        }
+        return match[s.length()][p.length()];
+    }
+    /**
+     * 如果当前为*，后面也为*那么就continue，继续看后面的，直到每组*里面的最后一个才加入到新string里
+     * */
+    private String removeDuplicateStars(String p){
+        StringBuilder res = new StringBuilder();
+        for(int i = 0; i < p.length(); ++i){
+            if(p.charAt(i) == '*' && i < p.length() - 1 && p.charAt(i+1) == '*'){
+                continue;
+            }
+            res.append(p.charAt(i));
+        }
+        return res.toString();
+    }
+}
+```
 #### 115. Distinct Subsequences
 ```java
 /**

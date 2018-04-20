@@ -1,6 +1,6 @@
 ---
 title: kmp算法
-date: 2018-03-09 13:27:12
+date: 2017-03-09 13:27:12
 tags: [经典算法]
 categories: [Algorithm]
 ---

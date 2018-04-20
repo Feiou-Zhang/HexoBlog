@@ -4,91 +4,59 @@ date: 2018-03-12 23:18:58
 tags: [String]
 categories: [Algorithm]
 ---
-### Common methods
 ​
+#### 43. Multiply Strings
 ```java
-charAt(int index)
-​
-codePointAt(int index)
-​
-substring(int start, int end) //s will be lower case
-//the start index will be included and the end index will be not.
-//same as the delete method from the StringBuilder class.
-​
-substring(int start)
+/**
+ * 题意：求2个 数字 字符串 的乘积
+ * */
+public class MultiplyStrings0043 {
+    /** time O(mn) space O(m+n) 方法：
+     * 思路：先建一个 数字 数组，长度为 2个字符串长度之和，然后模拟乘法运算，从低位开始算
+     * 先算 2个 数字 的乘积 需要加上 上一次 的进位，
+     * 然后当前低位的值 就是 乘积 % 10
+     * 注意，高位上的值， 要 += 乘积 / 10， 因为 for循环上一次 高位上已经有值了
+     * 最后form结果的时候，要先跳过开始的0，注意，不要把中间的0也跳过了
+     * 优化：
+     * */
+    public String multiply(String num1, String num2) {
+        if (num1 == null || num2 == null || num1.length() == 0 || num2.length() == 0) {
+            return "0";
+        }
+        if (num1.equals("0") || num2.equals("0")) {
+            return "0";
+        }
+        if (num1.equals("1")) {
+            return num2;
+        }
+        if (num2.equals("1")) {
+            return num1;
+        }
+        int[] result = new int[num1.length() + num2.length()];
+        for (int i = num1.length() - 1; i >= 0; --i) {
+            for (int j = num2.length() - 1; j >= 0; --j) {
+                int lowerPosition = i + j + 1;
+                int higherPosition = i + j;
+                int product = (num1.charAt(i) - '0') * (num2.charAt(j) - '0') + result[lowerPosition];
+                result[lowerPosition] = product % 10;
+                result[higherPosition] += product / 10;
+            }
+        }
+        StringBuilder res = new StringBuilder();
+        int index = 0;
+        while (result[index] == 0) {
+            ++index;
+        }
+        for (; index < result.length; ++index) {
+            res.append(result[index]);
+        }
+        return res.toString();
+    }
+}
+
 ```
-​
-### StringBuilder:
-​
-> there is no method to clear or empty a StringBuilder, so, how to empty a StringBuilder?
-```java
-//unlike a String, you can not do the following two ways
-sb = "";
-sb = null;
-//but there are other three ways you can achieve the goal.
-sb = new StringBuilder(); //slowest way
-sb.delete(0, sb.length());
-sb.setLength(0);
-```
-​
-Most of the methods will return a StringBuilder type:
-​
-```java
-用append方法的时候，不要使用append（“a" + "b"）
-尽量用append("a").append("b")
-append(char/char[]/String/StringBuilder)
-​
-delete(int start, int end), deleteCharAt(int index),
-​
-insert(int index, char c/String str)
-​
-replace(int start, int end, String str)
-​
-reverse()
-```
-​
-`However`
-​
-```java
-setCharAt(int index,char c) will return a void type. 
-will be as same as the replace method of String
-```
-​
-### String:
-​
-​
-> compareTo(String str): this could be a little bit tricky, it first compares the unique code for each character until the first difference no matter which one gets the longer length. If all the characters are the same, it will compare the length and return the difference.
-​
-There is a `contains` method but need CharSequence type of parameter.
-​
-```java
-concat(String str)
-//will be as same as +, but will not be less efficient than the append method of the StringBuilder
-​
-startsWith(String str), endsWith(String str)
-//be careful the 's' and these two methods ONLY take String type of parameter
-// will not take char or char[]
-​
-indexOf(int ch, char ch, String str)
-//will do the String Matching for you, but it is using the brute force algorithm. 
-​
-replace(char old, char new)
-//will be different with the replace of the StringBuilder Class
-​
-valueOf()
-//this is the ONLY one static method in the String class
-​
-```
-​
-​
 #### 395. Longest Substring with At Least K Repeating Characters
 ```java
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * 题意：给定一个字符串s（只包含小写字母），定义子串T，其中所有字符出现次数均不少于k次，返回子串T的最大长度。
  * */
