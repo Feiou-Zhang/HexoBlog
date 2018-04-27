@@ -373,23 +373,37 @@ public class HouseRobberII0213 {
  * */
 public class HouseRobberIII0337 {
     /** time O(n) space O(n) 方法：后序遍历 + dp
-     * 思路：后序遍历树，更新抢和不抢2个状态的最好结果
-     * 递归返回一个数组，index 0表示不抢，1表示抢
+     * 思路就是，如果抢当前房子，那么左右孩子都一定不能抢，
+     * 但如果不抢当前房子，既可以选择抢左孩子，也可以选择不抢左孩子，右边同理
+     * 那么就可以不断的记录以及更新  抢或不抢 二者的当前最好结果
+     后续遍历：抢当前房子的最大 就等于当前值 加上 不抢左右孩子的最大值
+     不抢当前房子的最大，就等于 抢或者不抢 左右孩子的最大
      * 优化：
      * */
     public int rob(TreeNode root) {
-        int[] res = postTraveral(root);
-        return Math.max(res[0], res[1]);
+        Tuple res = robHelper(root);
+        return Math.max(res.rob, res.notRob);
     }
-    private int[] postTraveral(TreeNode node) {
-        if (node == null) {
-            return new int[] {0, 0};
+    private Tuple robHelper(TreeNode root) {
+        if (root == null) {
+            return new Tuple(0, 0);
         }
-        int[] left = postTraveral(node.left);
-        int[] right = postTraveral(node.right);
-        int notRob = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
-        int rob = node.val + left[0] + right[0];
-        return new int[] {notRob, rob};
+        if (root.left == null && root.right == null) {
+            return new Tuple(root.val, 0);
+        }
+        Tuple left = robHelper(root.left);
+        Tuple right = robHelper(root.right);
+        int rob = root.val + left.notRob + right.notRob;
+        int notRob = Math.max(left.rob, left.notRob) + Math.max(right.rob, right.notRob);
+        return new Tuple(rob, notRob);
+    }
+    class Tuple {
+        int rob;
+        int notRob;
+        Tuple(int rob, int notRob) {
+            this.rob = rob;
+            this.notRob = notRob;
+        }
     }
 }
 

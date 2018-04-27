@@ -318,3 +318,64 @@ public class PopulatingNextRightPointersinEachNode0117 {
 }
 
 ```
+#### 549. Binary Tree Longest Consecutive Sequence II
+```java
+/**
+ * 题意：给一颗二叉树，找到最长的连续数字的路径，可以是任何方向，可以可以是子-父-子的路线
+ * */
+public class BinaryTreeLongestConsecutiveSequenceII0549 {
+    /** time O(n) space O(n) 方法：后序遍历
+     * 思路：后序遍历，返回一个tuple，包括节点的值，升序，和降序的长度，以及全局最大长度
+     * 首先分别递归左右子树，然后先记录下 当前的 max 就是 左右max 二者最大
+     * 然后再分别 求 当前 左右子树，上升 和下降 的 最好长度，
+     * 最后，算， 加上root之后，整体最大的 上升 和下降的 长度， 再和之上的 max 比较，选最大
+     * 优化：
+     * */
+    public int longestConsecutive(TreeNode root) {
+        return root == null ? 0 : helper(root).max;
+    }
+    private Tuple helper(TreeNode root) {
+        if (root.left == null && root.right == null) {
+            return new Tuple(root.val, 1, 1, 1);
+        }
+        Tuple left = root.left == null ? new Tuple(0, 0, 0, 0) : helper(root.left);
+        Tuple right = root.right == null ? new Tuple(0, 0, 0, 0) : helper(root.right);
+        int increase = 1;
+        int decrease = 1;
+        int max = Math.max(left.max, right.max);
+        if (root.val + 1 == left.val) {
+            increase = Math.max(left.increase + 1, increase);
+        }
+        if (root.val + 1 == right.val) {
+            increase = Math.max(right.increase + 1, increase);
+        }
+        if (root.val - 1 == left.val) {
+            decrease = Math.max(left.decrease + 1, decrease);
+        }
+        if (root.val - 1 == right.val) {
+            decrease = Math.max(right.decrease + 1, decrease);
+        }
+
+        if (root.val + 1 == left.val && root.val - 1 == right.val) {
+            max = Math.max(max, increase + decrease - 1);
+        }
+        if (root.val - 1 == left.val && root.val + 1 == right.val) {
+            max = Math.max(max, increase + decrease - 1);
+        }
+        max = Math.max(max, Math.max(increase, decrease));
+        return new Tuple(root.val, increase, decrease, max);
+    }
+    class Tuple {
+        int val;
+        int increase;
+        int decrease;
+        int max;
+        Tuple(int val, int increase, int decrease, int max) {
+            this.val = val;
+            this.increase = increase;
+            this.decrease = decrease;
+            this.max = max;
+        }
+    }
+}
+```

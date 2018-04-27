@@ -308,7 +308,65 @@ public class SerializeandDeserializeBST0449 {
     }
 }
 ```
+#### 536. Construct Binary Tree from String
+```java
+/**
+ * 题意：从一个字符串构建一颗二叉树，规则是这样，
+ * Input: "4(2(3)(1))(6(5))"
 
+        4
+      /   \
+     2     6
+    / \   /
+   3  1  5
+ * */
+public class ConstructBinaryTreefromString0536 {
+    /** time O(n^2) space O() 方法：先序遍历，暴力？
+     * 思路：先找到root的值，然后通过后面括号的匹配。分别找到左子树，和 右子树，然后递归建树
+     * 优化：既然是括号问题 ，应该可以用栈来优化？
+     * */
+    public TreeNode str2tree(String s) {
+        return (s == null || s.length() == 0) ? null : helper(s.toCharArray(), 0, s.length() - 1);
+    }
+    private TreeNode helper(char[] c, int start, int end) {
+        int sign = 1;
+        if (c[start] == '-') {
+            sign = -1;
+            ++start;
+        }
+        int value = 0;
+        while (start <= end && c[start] != '(') {
+            value = 10 * value + c[start++] - '0';
+        }
+        Integer leftStart = null;
+        if (++start <= end) {
+            leftStart = start;
+        }
+        int open = 1, close = 0;
+        while (open > close && start <= end) {
+            if (c[start] == '(') {
+                ++open;
+            }
+            if (c[start] == ')') {
+                ++close;
+            }
+            if (open > close) {
+                ++start;
+            }
+        }
+        int leftEnd = start - 1;
+        Integer rightStart = null;
+        if (++start <= end) {
+            rightStart = ++start;
+        }
+        TreeNode root = new TreeNode(sign * value);
+        root.left = (leftStart == null) ? null : helper(c, leftStart, leftEnd);
+        root.right = (rightStart == null) ? null : helper(c, rightStart, end - 1);
+        return root;
+    }
+}
+
+```
 #### 385. Mini Parser
 
 ```java

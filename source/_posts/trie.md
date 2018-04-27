@@ -261,3 +261,93 @@ public class AddandSearchWord0211 {
     }
 }
 ```
+#### 425. Word Squares
+```java
+/**
+ * 题意：给定一组没有重复的单词，从中寻找所有可能的“四方连词”。单词可以重复使用
+ * */
+public class WordSquares0425 {
+    /** time O(n^5) space O(n^5) 方法：字典树 + dfs + 回溯
+     * 最坏可能 有n个单词，长度为5，前4个都一样，只有最后一个字母不一样，那么以每个prefix开始的list 都有n个
+     * 那么递归中，就会变成对于每个单词 都延伸出n个递归，但由于单词长度为5，那么最多5层，也就是 n的5次方
+     * 做法一，暴力 dfs加回溯 遍历字符串数组，依次放入所有字符串，因为字符串可以重复使用，所以每次index 从 0开始
+     * 然后检查新加入的字符串 是否合法， 判断标准是，新加入单词的第i位是否 和 list里面第i个单词的第size 个字母一样
+     * 大集合 超时，然后 用了一个 记忆化 搜索做优化，如果 以当前单词开始，不能最终成功，那么map加入 <word, false>
+     * 还是超时，继续优化成 以某些单词的组合开始，是否可以成功，用 拼接后的字符串组合做key，还是超时
+     * 看了眼 tag，原来要用 字典树，然后 ，，很巧的 一开始竟然 做了一个 单词不可以复用的解法吗，用set检查
+     *
+     * ！ 正确思路 ！先构建字典树，每个节点  加一个 list，记录以当前子字符串 为 prefix 单词list
+     * 然后dfs的时候，先找到 当前 需要加入单词的 prefix 要求， 用list里面所有单词的 index为size的字符 总和
+     * 然后再字典树里面找到含有这个prefix的 单词表，然后 依次加入，然后回溯
+     * 优化：
+     * */
+    public List<List<String>> wordSquares(String[] words) {
+        List<List<String>> res = new ArrayList<>();
+        if (words == null || words.length == 0) {
+            return res;
+        }
+        TrieNode root = buildTrie(words);
+        int length = words[0].length();
+        for (String word : words) {
+            wordSquaresDFS(res, new ArrayList<>(Collections.singletonList(word)), root, length);
+        }
+        return res;
+    }
+    private void wordSquaresDFS(List<List<String>> res, List<String> list, TrieNode root, int target) {
+        if (list.size() == target) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        StringBuilder prefix = new StringBuilder();
+        for (String s : list) {
+            prefix.append(s.charAt(list.size()));
+        }
+        List<String> prefixList = getPrefixList(prefix.toString(), root);
+        for (String word : prefixList) {
+            list.add(word);
+            wordSquaresDFS(res, list, root, target);
+            list.remove(list.size() - 1);
+        }
+    }
+    private List<String> getPrefixList(String word, TrieNode root) {
+        for (int i = 0; i < word.length(); ++i) {
+            if (!root.map.containsKey(word.charAt(i))) {
+                return new ArrayList<>();
+            }
+            root = root.map.get(word.charAt(i));
+        }
+        return root.prefix;
+    }
+    private TrieNode buildTrie(String[] words) {
+        TrieNode root = new TrieNode();
+        for (String word : words) {
+            insert(word, root);
+        }
+        return root;
+    }
+    private void insert(String word, TrieNode root) {
+        for (int i = 0; i < word.length(); ++i) {
+            if (!root.map.containsKey(word.charAt(i))) {
+                root.map.put(word.charAt(i), new TrieNode(word.charAt(i)));
+            }
+            root = root.map.get(word.charAt(i));
+            root.prefix.add(word);
+        }
+    }
+    class TrieNode {
+        char c;
+        Map<Character, TrieNode> map;
+        List<String> prefix;
+        TrieNode() {
+            map = new HashMap<>(26);
+            prefix = new ArrayList<>();
+        }
+        TrieNode(char c) {
+            this.c = c;
+            map = new HashMap<>(26);
+            prefix = new ArrayList<>();
+        }
+    }
+}
+
+```

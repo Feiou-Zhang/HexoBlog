@@ -13,6 +13,73 @@ categories: [Algorithm]
 
 ### 二分查找
 
+#### 230. Kth Smallest Element in a BST
+```java
+/**
+ * 题目大意： 找到在bst里面第k小的元素
+ Note:
+ You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+
+ Follow up:
+ 如何优化 What if the BST is modified (insert/delete operations) often
+ and you need to find the kth smallest frequently?
+ * */
+public class KthSmallestElementinaBST0230 {
+    /** time O(k) space O(1) 方法：
+     * 思路：中序遍历，遍历到在第k个数停止。这个题用二分也可以做，但二分的复杂度反而更高
+     * 因为需要每次看当前数一共有多少节点。但其实，如果建树的时候，加入这个属性，就可以用O(H)
+     * 优化：
+     * follow up： 这题的难点其实在于Follow Up：如果我们频繁的操作该树，并且频繁的调用kth函数，
+     * 有什么优化方法使时间复杂度降低至O(h)？h是树的高度。我们可以在TreeNode中加入一个rank成员
+     * 这个变量记录的是该节点的左子树中节点的个数，其实就是有多少个节点比该节点小。
+     * 这样我们就可以用二叉树搜索的方法来解决。这个添加rank的操作可以在建树的时候一起完成。
+     * https://segmentfault.com/a/1190000008305885
+     * */
+    public int kthSmallest1(TreeNode root, int k) {
+        TreeNode head = root;
+        while (head != null) {
+            if (head.left == null) {
+                if (--k == 0) {
+                    return head.val;
+                }
+                head = head.right;
+            } else {
+                TreeNode tmp = head.left;
+                while (tmp.right != null && tmp.right != head) {
+                    tmp = tmp.right;
+                }
+                if (tmp.right == null) {
+                    tmp.right = head;
+                    head = head.left;
+                } else {
+                    if (--k == 0) {
+                        return head.val;
+                    }
+                    head = head.right;
+                    tmp.right = null;
+                }
+            }
+
+        }
+        return -1;
+    }
+    public int kthSmallest(TreeNode root, int k) {
+        int left = root.leftNum;
+        if(left == k - 1) return root.val;
+        else if(left < k - 1) return kthSmallest(root.right, k - left - 1);
+        else return kthSmallest(root.left, k);
+    }
+    class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        int leftNum;
+        TreeNode(int x, int num) { val = x; leftNum = num; }
+    }
+}
+
+```
+
 #### 235. Lowest Common Ancestor of a Binary Search Tree
 ```java
 /**
@@ -223,6 +290,41 @@ public class DeleteNodeinaBST0450 {
     }
 }
 
+```
+#### 669. Trim a Binary Search Tree
+```java
+/**
+ * 题意：给一颗BST，和一个范围，要求把这个范围之外的数都删掉
+ * */
+public class TrimaBinarySearchTree0669 {
+    /** time O(h) space O(h) 方法：二分
+     * 思路：如果当前root比L小，那么舍弃整个左子树和root
+     * 如果当前root 比R大，那么舍弃真个右子树和root
+     * 和root相等的话，就保留root，舍弃一边, 递归另一边
+     * 如果root 在 L, R之间，那么就分别递归左右子树
+     * 优化：
+     * */
+    public TreeNode trimBST(TreeNode root, int L, int R) {
+        if (root == null) {
+            return root;
+        }
+        if (root.val < L) {
+            root = trimBST(root.right, L, R);
+        } else if (root.val == L) {
+            root.left = null;
+            root.right = trimBST(root.right, L, R);
+        } else if (root.val > R) {
+            root = trimBST(root.left, L, R);
+        } else if (root.val == R) {
+            root.right = null;
+            root.left = trimBST(root.left, L, R);
+        } else {
+            root.left = trimBST(root.left, L, R);
+            root.right = trimBST(root.right, L, R);
+        }
+        return root;
+    }
+}
 ```
 #### 776. Split BST
 
