@@ -131,8 +131,9 @@ public class GeneralizedAbbreviation0320 {
      * 要么就abbreviate, 也就是用数字1来代替，这种情况，如果直接把1加入到stringbuilder里面的话
      * 很可能会出现11这种情况，所以，我们不能直接加1，而是利用一个count的变量，用++count来记录
      * 所以，在不abbreviate的时候，首先要把之前的count加入到stringbuilder里
-     * 这题的重点是，abbreviate的时候如何回溯，因为毕竟当时没有加入任何东西到stringbuilder里面
-     * 所以，这个题要在加入结果后，也回溯，这样就可以把最后没走到情况二的分支也回溯
+     * 重点是，需要先递归 不 abbreviate 的情况，因为这种情况改变了 stringbuilder，递归完马上可以回溯 
+     * 而另外一种情况，stringbuilder 并没有直接改变，反而是 更新了count，而这样就无法回溯，
+     * 如果先递归这种情况，状态就无法重置 导致结果出错
      * 优化：
      * */
     public List<String> generateAbbreviations(String word) {
@@ -141,12 +142,25 @@ public class GeneralizedAbbreviation0320 {
         return res;
     }
     private void gaHelper(List<String> res, String word, StringBuilder curr, int index, int count) {
+        if (index == word.length()) {
+            res.add(curr.append(count > 0 ? count : "").toString());
+            return;
+        }
+        int len = curr.length();
+        gaHelper(res, word, curr.append(count > 0 ? count : "").append(word.charAt(index)), index + 1, 0);
+        curr.setLength(len);
+        gaHelper(res, word, curr, index + 1, count + 1);
+    }
+    /** 旧的方法， 回溯的很奇怪
+     * 这题的重点是，abbreviate的时候如何回溯，因为毕竟当时没有加入任何东西到stringbuilder里面
+     * 所以，这个题要在加入结果后，也回溯，这样就可以把最后没走到情况二的分支也回溯*/
+    private void gaHelper1(List<String> res, String word, StringBuilder curr, int index, int count) {
         int len = curr.length();
         if (index == word.length()) {
             res.add(curr.append(count > 0 ? count : "").toString());
         } else {
-            gaHelper(res, word, curr, index + 1, count + 1);
-            gaHelper(res, word, curr.append(count > 0 ? count : "").append(word.charAt(index)), index + 1, 0);
+            gaHelper1(res, word, curr, index + 1, count + 1);
+            gaHelper1(res, word, curr.append(count > 0 ? count : "").append(word.charAt(index)), index + 1, 0);
         }
         curr.setLength(len);
     }
@@ -396,7 +410,7 @@ public class PermutationSequence0060 {
  Output: ["a1b2", "a1B2", "A1b2", "A1B2"]
  * */
 public class LetterCasePermutation0784 {
-    /** time O(n!) space O(n) 时间复杂度是 n*T(n-1),所以每次n的规模减一，所以是n的阶乘
+    /** time O(n * 2^n) space O(n * 2^n)
      * 方法：回溯
      * 思路：递归函数里先循环skipindex为数字的字符。然后，dfs加回溯，造一个新的字符串
      * 当新的字符串长度等于原来字符串长度的时候，加到list。并返回

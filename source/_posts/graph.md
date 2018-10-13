@@ -1111,7 +1111,6 @@ public class IsGraphBipartite0785 {
 
 #### 490 The Maze
 ```java
-import java.util.Arrays;
 
 /**
  * 题意：给定一个迷宫，二维矩阵，0代表可以通行，1代表墙，假设4周都是墙
@@ -1161,10 +1160,6 @@ public class TheMaze0490 {
 ```
 #### 505 The Maze II
 ```java
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Queue;
-
 /**
  * 题意：找出最短路线的长度
  * */
@@ -1229,4 +1224,50 @@ public class TheMazeII0505 {
     }
 }
 
+```
+
+### 拓扑
+
+#### 210. Course Schedule II
+```java
+/**
+ * 题意：要求返回一条 合法的 上课路径
+ * */
+public class CourseScheduleii0210 {
+    /** time O(V + E) space O(V + E)
+     * 思路：这种，流程，流水线，能不能最终完成，肯定是拓扑排序
+     * 步骤：建图，建入度表，用队列拓扑，如果最终入队的课程数量和总数量一直，表示可以完成，
+     * 入队的顺序就是上课的顺序
+     * 建图：既然课是从 0 到 n-1，可以用Arraylist数组来表示图，顶点就是 prerequisite
+     * 入度表：没有prerequisite的课的入度就为0，可以入队
+     * */
+    public int[] findOrder(int numCourses, int[][] pre) {
+        Map<Integer, Set<Integer>> map = new HashMap<>(numCourses);
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < numCourses; ++i) {
+            map.put(i, new HashSet<>());
+        }
+        for (int[] pair : pre) {
+            map.get(pair[1]).add(pair[0]);
+            ++indegree[pair[0]];
+        }
+        Deque<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < numCourses; ++i) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int count = 0;
+        int[] order = new int[numCourses];
+        while (!queue.isEmpty()) {
+            order[count] = queue.poll();
+            for (int course : map.get(order[count++])) {
+                if (--indegree[course] == 0) {
+                    queue.offer(course);
+                }
+            }
+        }
+        return count == numCourses ? order : new int[] {};
+    }
+}
 ```
